@@ -25,3 +25,4 @@ packages/
 
 # User-specific files
 *.userprefs
+/MarvelRivalsFanSiteDotNet/Web.config
