@@ -1,0 +1,199 @@
+﻿@model IEnumerable<MarvelRivalsFanSiteDotNet.Models.HeroBoardPlayer>
+
+@{
+    ViewBag.Title = "Marvel Rivals Leaderboard";
+    var heroName = ViewBag.HeroName as string ?? "All Heroes";
+}
+
+<div class="leaderboard-container">
+    <h1 class="leaderboard-header">
+        <i class="icon icon-hero"></i> @heroName Leaderboard
+    </h1>
+
+    <div class="leaderboard-controls">
+        @using (Html.BeginForm("Index", "Leaderboard", FormMethod.Get))
+        {
+            <input type="text" name="heroName" placeholder="Search by hero..." value="@(ViewBag.HeroName as string ?? "")" />
+            <button type="submit" class="btn-search"><i class="icon icon-search"> Search</i></button>
+        }
+    </div>
+
+    <div class="table-responsive">
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <!-- Rank -->
+                    <th>
+                        @Html.ActionLink("Rank", "Index", new
+                        {
+                            heroName = heroName,
+                            sortBy = "rank",
+                            ascending = ViewBag.SortBy == "rank" ? !ViewBag.Ascending : false
+                        })
+                        @if (ViewBag.SortBy == "rank")
+                        {
+                            <span class="sort-arrow">@(ViewBag.Ascending ? "▲" : "▼")</span>
+                        }
+                    </th>
+
+                    <!-- Player -->
+                    <th>Player</th>
+
+                    <!-- Kills -->
+                    <th>
+                        @Html.ActionLink("Kills", "Index", new
+                        {
+                            heroName = heroName,
+                            sortBy = "kills",
+                            ascending = ViewBag.SortBy == "kills" ? !ViewBag.Ascending : false
+                        })
+                        @if (ViewBag.SortBy == "kills")
+                        {
+                            <span class="sort-arrow">@(ViewBag.Ascending ? "▲" : "▼")</span>
+                        }
+                    </th>
+
+                    <!-- Deaths -->
+                    <th>
+                        @Html.ActionLink("Deaths", "Index", new
+                        {
+                            heroName = heroName,
+                            sortBy = "deaths",
+                            ascending = ViewBag.SortBy == "deaths" ? !ViewBag.Ascending : false
+                        })
+                        @if (ViewBag.SortBy == "deaths")
+                        {
+                            <span class="sort-arrow">@(ViewBag.Ascending ? "▲" : "▼")</span>
+                        }
+                    </th>
+
+                    <!-- Assists -->
+                    <th>
+                        @Html.ActionLink("Assists", "Index", new
+                        {
+                            heroName = heroName,
+                            sortBy = "assists",
+                            ascending = ViewBag.SortBy == "assists" ? !ViewBag.Ascending : false
+                        })
+                        @if (ViewBag.SortBy == "assists")
+                        {
+                            <span class="sort-arrow">@(ViewBag.Ascending ? "▲" : "▼")</span>
+                        }
+                    </th>
+
+                    <!-- KDA -->
+                    <th title="(Kills + Assists) / Deaths">
+                        @Html.ActionLink("KDA", "Index", new
+                        {
+                            heroName = heroName,
+                            sortBy = "kda",
+                            ascending = ViewBag.SortBy == "kda" ? !ViewBag.Ascending : false
+                        })
+                        @if (ViewBag.SortBy == "kda")
+                        {
+                            <span class="sort-arrow">@(ViewBag.Ascending ? "▲" : "▼")</span>
+                        }
+                    </th>
+
+                    <!-- Matches -->
+                    <th>
+                        @Html.ActionLink("Matches", "Index", new
+                        {
+                            heroName = heroName,
+                            sortBy = "matches",
+                            ascending = ViewBag.SortBy == "matches" ? !ViewBag.Ascending : false
+                        })
+                        @if (ViewBag.SortBy == "matches")
+                        {
+                            <span class="sort-arrow">@(ViewBag.Ascending ? "▲" : "▼")</span>
+                        }
+                    </th>
+
+                    <!-- Wins -->
+                    <th>
+                        @Html.ActionLink("Wins", "Index", new
+                        {
+                            heroName = heroName,
+                            sortBy = "wins",
+                            ascending = ViewBag.SortBy == "wins" ? !ViewBag.Ascending : false
+                        })
+                        @if (ViewBag.SortBy == "wins")
+                        {
+                            <span class="sort-arrow">@(ViewBag.Ascending ? "▲" : "▼")</span>
+                        }
+                    </th>
+
+                    <!-- Win Rate -->
+                    <th>
+                        @Html.ActionLink("Win %", "Index", new
+                        {
+                            heroName = heroName,
+                            sortBy = "winrate",
+                            ascending = ViewBag.SortBy == "winrate" ? !ViewBag.Ascending : false
+                        })
+                        @if (ViewBag.SortBy == "winrate")
+                        {
+                            <span class="sort-arrow">@(ViewBag.Ascending ? "▲" : "▼")</span>
+                        }
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var player in Model)
+                {
+                    <tr class="player-row">
+                        <td class="rank-cell">
+                            <span class="rank-badge">#@player.Info.RankSeason.Level</span>
+                        </td>
+                        <td class="player-cell">
+                            <div class="player-avatar">
+                                @*<img src="http/assets/avatars/@(player.Info.CurrentHeadIconId).png"
+                                    alt="@player.Info.Name"
+                                    onerror="this.src='/assets/avatars/default.png'" />*@
+                            </div>
+                            <div class="player-info">
+                                <span class="player-name">@player.Info.Name</span>
+                                <span class="player-id">ID: @player.PlayerUid</span>
+                            </div>
+                        </td>
+                        <td>@player.Info.RankSeason.Level</td>
+                        <td>@player.Wins</td>
+                        <td>
+                            <div class="win-rate-bar">
+                                <div class="win-rate-fill"
+                                     style="width: @(player.Matches > 0 ? (player.Wins * 100 / player.Matches) : 0) %; background-color: @GetWinRateColor(player.Wins, player.Matches);">
+                                    <span>@(player.Matches > 0 ? $"{player.Wins * 100 / player.Matches}%" : "N/A")</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            @player.Kills/@player.Deaths/@player.Assists
+                        </td>
+                        <td>@player.Matches</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@functions {
+    string CalculateKDA(int kills, int deaths, int assists)
+    {
+        if (deaths == 0) return "Perfect";
+        var ratio = (kills + assists) / (double)deaths;
+        return ratio.ToString("0.00");
+    }
+
+    int CalculateWinRate(int wins, int matches)
+    {
+        return matches > 0 ? (int)Math.Round((wins * 100.0) / matches) : 0;
+    }
+
+    string GetWinRateColor(int wins, int matches)
+    {
+        if (matches == 0) return "#ccc";
+        var rate = (wins * 100) / matches;
+        return rate >= 60 ? "#4CAF50" : rate >= 40 ? "#FFC107" : "#F44336";
+    }
+}

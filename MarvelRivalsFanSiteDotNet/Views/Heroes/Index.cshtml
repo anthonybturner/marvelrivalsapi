@@ -1,0 +1,80 @@
+﻿@model IEnumerable<MarvelRivalsFanSiteDotNet.Models.Hero>
+
+@{
+    ViewBag.Title = "Marvel Rivals Heroes";
+}
+
+<div class="heroes-container">
+    <h1 class="heroes-header">
+        <i class="icon icon-heroes"></i> @ViewBag.Title
+    </h1>
+
+    <!-- Search and Filter Controls -->
+    <div class="hero-controls">
+        @using (Html.BeginForm("Index", "Heroes", FormMethod.Get))
+        {
+            <div class="search-box">
+                <input type="text" name="search" placeholder="Search heroes..." value="@ViewBag.Search" />
+                <button type="submit">
+                    <i class="icon icon-search"></i>
+                </button>
+            </div>
+
+            <div class="filter-options">
+                <span>Filter by:</span>
+
+            </div>
+        }
+    </div>
+
+    <!-- Heroes Grid -->
+    <div class="heroes-grid">
+        @foreach (var hero in Model)
+        {
+            <div class="hero-card">
+                <div class="hero-image">
+                    <img src="https://marvelrivalsapi.com@(hero.ImageUrl)" alt="@hero.Name"
+                         onerror="this.src='https://marvelrivalsapi.com/rivals/default-hero.png'" />
+                </div>
+                <div class="hero-info">
+                    <h3>@hero.Name</h3>
+                    <div class="hero-meta">
+                        <span class="hero-role @hero.Role.ToLower()">@hero.Role</span>
+                        <span class="hero-difficulty">Difficulty: @hero.Difficulty/5</span>
+                    </div>
+                    <div class="hero-abilities">
+                        @foreach (var ability in hero.Abilities.Take(3))
+                        {
+                            <div class="ability-icon" title="@ability.Name">
+                                <img src="https://marvelrivalsapi.com/rivals@(ability.IconUrl)" alt="@ability.Name" />
+                            </div>
+                        }
+                    </div>
+                    @Html.ActionLink("View Details", "Details", new { id = hero.Id },
+                        new { @class = "btn btn-hero" })
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        @if (ViewBag.CurrentPage > 1)
+        {
+            @Html.ActionLink("Previous", "Index",
+                new { page = ViewBag.CurrentPage - 1, search = ViewBag.Search },
+                new { @class = "btn btn-prev" })
+        }
+
+        <span class="page-info">
+            Page @ViewBag.CurrentPage of @ViewBag.TotalPages
+        </span>
+
+        @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+        {
+            @Html.ActionLink("Next", "Index",
+                new { page = ViewBag.CurrentPage + 1, search = ViewBag.Search },
+                new { @class = "btn btn-next" })
+        }
+    </div>
+</div>

@@ -1,0 +1,27 @@
+# ASP.NET Core
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.vs/
+.vs/
+*.sw?
+*.msi
+*.nupkg
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# NuGet Packages
+*.nupkg
+packages/
+
+# User-specific files
+*.userprefs
