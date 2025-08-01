@@ -1,10 +1,6 @@
 ﻿using MarvelRivalsFanSiteDotNet.Services;
 using MarvelRivalsFanSiteDotNet.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace MarvelRivalsFanSiteDotNet.Controllers
@@ -15,9 +11,10 @@ namespace MarvelRivalsFanSiteDotNet.Controllers
 
         public HeroesController(IHeroesService heroesService) {
             _heroesService = heroesService;
-        }   
+        }
 
         // GET: Heroes
+        [Route("heroes")]
         public async Task<ActionResult> Index()
         {
             var response = await _heroesService.GetHeroesAsync();

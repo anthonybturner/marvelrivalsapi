@@ -28,8 +28,11 @@ namespace MarvelRivalsFanSiteDotNet.Services
                 response.EnsureSuccessStatusCode();
 
                 var content = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<HeroesResponse>(content);
-                return result;
+                var result = JsonConvert.DeserializeObject<List<Hero>>(content);
+                return new HeroesResponse
+                {
+                    heroes = result
+                };
             }
             catch (HttpRequestException e)
             {

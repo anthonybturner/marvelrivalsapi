@@ -7,8 +7,9 @@ using System.Web;
 namespace MarvelRivalsFanSiteDotNet.Models
 {
 
-    public class HeroesResponse : List<Hero>
+    public class HeroesResponse
     {
+        public List<Hero> heroes;
     }
 
     public class HeroResponse
