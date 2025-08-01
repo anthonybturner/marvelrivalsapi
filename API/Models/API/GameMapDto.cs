@@ -4,17 +4,7 @@ namespace MarvelRivals.Models.API
 {
     public class GameMapDto
     {
-
-        [JsonPropertyName("total_maps")]
-        public int TotalMaps { get; set; }
-
-        [JsonPropertyName("maps")]
-        public List<GameMap>? Maps { get; set; }
-
-    }
-
-    public class GameMap
-    {
+ 
         [JsonPropertyName("id")]
         public int Id { get; set; }
 
@@ -44,17 +34,6 @@ namespace MarvelRivals.Models.API
 
         [JsonPropertyName("images")]
         public List<string>? Images { get; set; }
-    }
-
-    public class SubMap
-    {
-        [JsonPropertyName("id")]
-        public int? Id { get; set; }
-
-        [JsonPropertyName("name")]
-        public string? Name { get; set; }
-
-        [JsonPropertyName("thumbnail")]
-        public string? Thumbnail { get; set; }
+       
     }
 }

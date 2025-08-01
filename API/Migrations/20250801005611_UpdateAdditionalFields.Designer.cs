@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MarvelRivals.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250730090430_InitHeroes")]
-    partial class InitHeroes
+    [Migration("20250801005611_UpdateAdditionalFields")]
+    partial class UpdateAdditionalFields
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace MarvelRivals.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("API.Data.Entities.Ability", b =>
+            modelBuilder.Entity("MarvelRivals.Models.Entities.Ability", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -38,14 +38,10 @@ namespace MarvelRivals.Migrations
                     b.Property<int?>("AdditionalFieldsId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Appearance")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HeroId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Icon")
@@ -55,9 +51,6 @@ namespace MarvelRivals.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Quality")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
@@ -72,10 +65,13 @@ namespace MarvelRivals.Migrations
                     b.ToTable("Ability");
                 });
 
-            modelBuilder.Entity("API.Data.Entities.AdditionalFields", b =>
+            modelBuilder.Entity("MarvelRivals.Models.Entities.AdditionalFields", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Casting")
                         .HasColumnType("nvarchar(max)");
@@ -94,7 +90,7 @@ namespace MarvelRivals.Migrations
                     b.ToTable("AdditionalFields");
                 });
 
-            modelBuilder.Entity("API.Data.Entities.Costume", b =>
+            modelBuilder.Entity("MarvelRivals.Models.Entities.Costume", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -106,14 +102,12 @@ namespace MarvelRivals.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CostumeId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HeroId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Icon")
@@ -132,7 +126,52 @@ namespace MarvelRivals.Migrations
                     b.ToTable("Costumes");
                 });
 
-            modelBuilder.Entity("API.Data.Entities.Hero", b =>
+            modelBuilder.Entity("MarvelRivals.Models.Entities.GameMap", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("GameMapId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("GameMode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.PrimitiveCollection<string>("Images")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsCompetitive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SubMapId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Video")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubMapId");
+
+                    b.ToTable("GameMaps");
+                });
+
+            modelBuilder.Entity("MarvelRivals.Models.Entities.Hero", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -169,7 +208,29 @@ namespace MarvelRivals.Migrations
                     b.ToTable("Heroes");
                 });
 
-            modelBuilder.Entity("API.Data.Entities.Transformation", b =>
+            modelBuilder.Entity("MarvelRivals.Models.Entities.SubMap", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SubMapId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Thumbnail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SubMap");
+                });
+
+            modelBuilder.Entity("MarvelRivals.Models.Entities.Transformation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -181,7 +242,6 @@ namespace MarvelRivals.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HeroId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Icon")
@@ -203,40 +263,43 @@ namespace MarvelRivals.Migrations
                     b.ToTable("Transformations");
                 });
 
-            modelBuilder.Entity("API.Data.Entities.Ability", b =>
+            modelBuilder.Entity("MarvelRivals.Models.Entities.Ability", b =>
                 {
-                    b.HasOne("API.Data.Entities.AdditionalFields", "AdditionalFields")
+                    b.HasOne("MarvelRivals.Models.Entities.AdditionalFields", "AdditionalFields")
                         .WithMany()
                         .HasForeignKey("AdditionalFieldsId");
 
-                    b.HasOne("API.Data.Entities.Hero", null)
+                    b.HasOne("MarvelRivals.Models.Entities.Hero", null)
                         .WithMany("Abilities")
-                        .HasForeignKey("HeroId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("HeroId");
 
                     b.Navigation("AdditionalFields");
                 });
 
-            modelBuilder.Entity("API.Data.Entities.Costume", b =>
+            modelBuilder.Entity("MarvelRivals.Models.Entities.Costume", b =>
                 {
-                    b.HasOne("API.Data.Entities.Hero", null)
+                    b.HasOne("MarvelRivals.Models.Entities.Hero", null)
                         .WithMany("Costumes")
-                        .HasForeignKey("HeroId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("HeroId");
                 });
 
-            modelBuilder.Entity("API.Data.Entities.Transformation", b =>
+            modelBuilder.Entity("MarvelRivals.Models.Entities.GameMap", b =>
                 {
-                    b.HasOne("API.Data.Entities.Hero", null)
-                        .WithMany("Transformations")
-                        .HasForeignKey("HeroId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("MarvelRivals.Models.Entities.SubMap", "SubMap")
+                        .WithMany()
+                        .HasForeignKey("SubMapId");
+
+                    b.Navigation("SubMap");
                 });
 
-            modelBuilder.Entity("API.Data.Entities.Hero", b =>
+            modelBuilder.Entity("MarvelRivals.Models.Entities.Transformation", b =>
+                {
+                    b.HasOne("MarvelRivals.Models.Entities.Hero", null)
+                        .WithMany("Transformations")
+                        .HasForeignKey("HeroId");
+                });
+
+            modelBuilder.Entity("MarvelRivals.Models.Entities.Hero", b =>
                 {
                     b.Navigation("Abilities");
 

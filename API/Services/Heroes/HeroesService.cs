@@ -23,9 +23,6 @@ namespace MarvelRivals.Services.Heroes
             {
                 PropertyNameCaseInsensitive = true,
             };
-
-            // Call the async method without await
-            //SyncFetchedAPIHeroesToDatabaseAsync().GetAwaiter().GetResult();
         }
 
         private async Task<IEnumerable<HeroDto>> FetchAllAsync()

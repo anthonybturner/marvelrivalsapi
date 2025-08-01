@@ -21,7 +21,7 @@ namespace MarvelRivals.Models.Entities
 
         public string? AttackType { get; set; }
 
-        public string[]? Team { get; set; }
+        public List<string>? Team { get; set; }
 
         public string? Difficulty { get; set; }
         public string? Bio { get; set; }
@@ -86,9 +86,6 @@ namespace MarvelRivals.Models.Entities
         public string? Description { get; set; }
 
         public AdditionalFields? AdditionalFields { get; set; }
-        public string? Quality { get; set; }
-        public string? Appearance { get; set; }
-
         // Foreign key to Hero
         public string? HeroId { get; set; }
 
@@ -97,8 +94,6 @@ namespace MarvelRivals.Models.Entities
     public class AdditionalFields
     {
         [Key]
-        [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
         public string? Key { get; set; }
 

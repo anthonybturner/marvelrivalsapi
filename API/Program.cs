@@ -34,19 +34,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     .LogTo(Console.WriteLine, LogLevel.Information)
 ); // Use builder.Configuration
 
-
-builder.Services.AddScoped<HeroesService>();
-builder.Services.AddScoped<GameMapsService>();
-builder.Services.AddScoped<GameMapsRepository>();
-builder.Services.AddScoped<GameMapsManager>();
-builder.Services.AddScoped<HeroesManager>();
-//builder.Services.AddScoped<HeroesRepository>();
-
-
+ 
 builder.Services.AddScoped<IHeroesService, HeroesService>();
 builder.Services.AddScoped<IGameMapsService, GameMapsService>();
 builder.Services.AddScoped<IGameMapsRepository, GameMapsRepository>();
 builder.Services.AddScoped<IHeroesRepository, HeroesRepository>();
+
+
+builder.Services.AddScoped<GameMapsManager>();
+builder.Services.AddScoped<HeroesManager>();
 
 builder.Services.AddHttpClient<IHeroesService, HeroesService>(client =>
 {

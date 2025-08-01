@@ -5,7 +5,7 @@ namespace MarvelRivals.Mappings
 {
     public static class GameMapsMapper
     {
-        public static Models.Entities.GameMap ToEntity(Models.API.GameMap map)
+        public static Models.Entities.GameMap ToEntity(GameMapDto map)
         {
             return new Models.Entities.GameMap
             {
@@ -27,9 +27,9 @@ namespace MarvelRivals.Mappings
             };
         }
 
-        public static Models.API.GameMap ToDto(Models.Entities.GameMap map)
+        public static Models.API.GameMapDto ToDto(Models.Entities.GameMap map)
         {
-            return new Models.API.GameMap
+            return new Models.API.GameMapDto
             {
                 Id = map.Id,
                 Name = map.Name,

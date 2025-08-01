@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MarvelRivals.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250731102708_InitGameMaps")]
-    partial class InitGameMaps
+    [Migration("20250801035226_UpdateHeroTransformationRelationship")]
+    partial class UpdateHeroTransformationRelationship
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,9 +38,6 @@ namespace MarvelRivals.Migrations
                     b.Property<int?>("AdditionalFieldsId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Appearance")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -54,9 +51,6 @@ namespace MarvelRivals.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Quality")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
@@ -74,7 +68,10 @@ namespace MarvelRivals.Migrations
             modelBuilder.Entity("MarvelRivals.Models.Entities.AdditionalFields", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Casting")
                         .HasColumnType("nvarchar(max)");
@@ -126,7 +123,7 @@ namespace MarvelRivals.Migrations
 
                     b.HasIndex("HeroId");
 
-                    b.ToTable("Costumes");
+                    b.ToTable("Costume");
                 });
 
             modelBuilder.Entity("MarvelRivals.Models.Entities.GameMap", b =>
@@ -263,7 +260,7 @@ namespace MarvelRivals.Migrations
 
                     b.HasIndex("HeroId");
 
-                    b.ToTable("Transformations");
+                    b.ToTable("Transformation");
                 });
 
             modelBuilder.Entity("MarvelRivals.Models.Entities.Ability", b =>

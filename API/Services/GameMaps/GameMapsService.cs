@@ -28,14 +28,14 @@ namespace MarvelRivals.Services.GameMaps
 
         }
 
-        public async Task<GameMapDto> FetchAllAsync()
+        public async Task<GameMapResponseDto> FetchAllAsync()
         {
             var response = await _httpClient.GetAsync("v1/maps?limit=42");
             response.EnsureSuccessStatusCode(); // Throw an exception if the response status is not 2xx
 
             // Deserialize the JSON response into a list of HeroDto
             var content = await response.Content.ReadAsStringAsync();
-            var maps = JsonSerializer.Deserialize<GameMapDto>(content, _jsonSerializerOptions);
+            var maps = JsonSerializer.Deserialize<GameMapResponseDto>(content, _jsonSerializerOptions);
             return maps;
         }
 

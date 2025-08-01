@@ -2,6 +2,7 @@
 using MarvelRivals.Mappings;
 using MarvelRivals.Models.API;
 using MarvelRivals.Services.Heroes;
+using Microsoft.EntityFrameworkCore;
 
 namespace MarvelRivals.Services.Managers
 {
@@ -16,26 +17,33 @@ namespace MarvelRivals.Services.Managers
             _heroesRepository = heroesRepository;
         }
 
+        public async Task InitAsync()
+        {
+            await FetchAllHeroesAndSaveToDatabaseAsync();
+        }
+
         public async Task FetchAllHeroesAndSaveToDatabaseAsync()
         {
             try
             {
-                List<HeroDto> response = (await _heroesService.FetchAllAsync()).ToList(); // Explicitly convert IEnumerable to List
-                if (response == null || !response.Any()) return;
+                var heroDtos = await _heroesService.FetchAllAsync();
+                var ids = heroDtos.Select(h => h.Id).Where(id => id != null).Cast<string>().ToList(); // Ensure null values are filtered out and cast to non-nullable
+                var existingHeroes = await _heroesRepository.GetByIdsAsync(ids);
 
-                List<Models.Entities.Hero> heroes = new List<Models.Entities.Hero>();
-                for (var i = 0; i < response.Count; i++)
+                foreach (var dto in heroDtos)
                 {
-                    var heroDto = response[i];
-                    var id = heroDto.Id;
-                    var existingHero = await _heroesRepository.GetByIdAsync(id);
+                    var existingHero = existingHeroes.FirstOrDefault(h => h.Id == dto.Id);
                     if (existingHero != null)
                     {
-                        continue;
+                        HeroMapper.UpdateEntity(existingHero, dto); // Just modifies tracked entity
                     }
-                    heroes.Add(HeroMapper.ToEntity(heroDto));
-                    await _heroesRepository.AddRangeAsync(heroes);
+                    else
+                    {
+                        await _heroesRepository.AddAsync(HeroMapper.ToEntity(dto)); // Add new
+                    }
                 }
+
+                await _heroesRepository.SaveChangesAsync(); // Only one DB hit
             }
             catch (Exception ex)
             {

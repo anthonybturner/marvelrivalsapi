@@ -12,5 +12,8 @@ namespace MarvelRivals.Data.Repositories.Maps
         Task AddAsync(GameMap map);
         Task AddRangeAsync(List<GameMap> maps);
         Task DeleteAsync(string id);
+        Task SaveChangesAsync();
+
+        void Update(Hero hero);
     }
 }

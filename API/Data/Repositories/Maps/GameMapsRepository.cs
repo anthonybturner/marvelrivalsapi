@@ -1,4 +1,5 @@
-﻿using MarvelRivals.Models.Entities;
+﻿using MarvelRivals.Models.API;
+using MarvelRivals.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MarvelRivals.Data.Repositories.Maps
@@ -24,14 +25,13 @@ namespace MarvelRivals.Data.Repositories.Maps
 
         public async Task AddAsync(GameMap map)
         {
-            _context.GameMaps.Add(map);
-            await _context.SaveChangesAsync();
+            await _context.GameMaps.AddAsync(map);
         }
 
         public async Task AddRangeAsync(List<GameMap> maps)
         {
             await _context.GameMaps.AddRangeAsync(maps);
-            await _context.SaveChangesAsync();
+            await SaveChangesAsync();
         }
 
         public async Task DeleteAsync(string id)
@@ -40,8 +40,16 @@ namespace MarvelRivals.Data.Repositories.Maps
             if (map != null)
             {
                 _context.GameMaps.Remove(map);
-                await _context.SaveChangesAsync();
             }
+        }
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        public void Update(Hero hero)
+        {
+            _context.Heroes.Update(hero);
         }
     }
 }

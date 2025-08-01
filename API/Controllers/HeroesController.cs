@@ -9,22 +9,17 @@ namespace MarvelRivals.Controllers
 {
     [ApiController]
     [Route("api/heroes")]
-    public class HeroesController : ControllerBase
+    public class HeroesController(IHeroesRepository heroesRepository, HeroesManager heroesManager) : ControllerBase
     {
-        private readonly IHeroesRepository _heroesRepository;
-        private readonly HeroesManager _heroesManager;
-
-        public HeroesController(IHeroesRepository heroesRepository, HeroesManager heroesManager)
-        {
-            _heroesRepository = heroesRepository;
-            _heroesManager = heroesManager;
-            _heroesManager.FetchAllHeroesAndSaveToDatabaseAsync().GetAwaiter().GetResult(); // Ensure heroes are loaded on startup
-        }
+        private readonly IHeroesRepository _heroesRepository = heroesRepository;
+        private readonly HeroesManager _heroesManager = heroesManager;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Hero>>> GetAllHeroes()
+        public async Task<ActionResult<IEnumerable<HeroDto>>> GetAllHeroes()
         {
-            var response = await _heroesRepository.GetAllAsync();
+            // Fix: Await the Task returned by GetAllAsync and then convert the result to a list
+            var heroes = (await _heroesRepository.GetAllAsync());
+            var response = heroes.Select(HeroMapper.ToDto); // Assuming HeroMapper has a ToDto method
             return Ok(response);
         }
 
@@ -32,10 +27,8 @@ namespace MarvelRivals.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Hero>> GetHero(string id)
         {
-            if (String.IsNullOrEmpty(id))
-            {
-                return BadRequest(new
-                {
+            if (String.IsNullOrEmpty(id)){
+                return BadRequest(new{
                     type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
                     title = "One or more validation errors occurred.",
                     status = 400,
@@ -60,7 +53,16 @@ namespace MarvelRivals.Controllers
         {
             Hero hero = HeroMapper.ToEntity(Dto);
             await _heroesRepository.AddAsync(hero);
-            return CreatedAtAction(nameof(GetHero), new { Id = hero.Id }, hero);
+            await _heroesRepository.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetHero), new { hero.Id }, hero);
+        }
+
+
+        [HttpPost("sync-heroes")]
+        public async Task<IActionResult> SyncHeroes()
+        {
+            await _heroesManager.InitAsync();
+            return Ok("Heroes synced.");
         }
     }
 }

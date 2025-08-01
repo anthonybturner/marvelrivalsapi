@@ -1,7 +1,10 @@
 ﻿using MarvelRivals.Data.Repositories.Maps;
+using MarvelRivals.Mappings;
+using MarvelRivals.Models.API;
 using MarvelRivals.Models.Entities;
 using MarvelRivals.Services.Managers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace MarvelRivals.Controllers
 {
@@ -18,23 +21,31 @@ namespace MarvelRivals.Controllers
         {
             _gameMapsRepo = gameMapsRepo;
             _gameMapsManager = gameMapsManager;
-            _gameMapsManager.FetchAllMapsAndSaveToDatabaseAsync().GetAwaiter().GetResult(); // Initialize maps on startup
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GameMap>>> GetAllMaps()
+        public async Task<ActionResult<IEnumerable<GameMapDto>>> GetAllMaps()
         {
-            var response = await _gameMapsRepo.GetAllAsync();
-            return Ok(response);
+            var maps = await _gameMapsRepo.GetAllAsync();
+            var mappedGameMaps = maps.Select(GameMapsMapper.ToDto).ToList(); // Assuming GameMapper has a ToDto method
+            return Ok(mappedGameMaps);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetMapById(int id)
         {
+
             // Logic to get a specific game map by id
             var response = _gameMapsRepo.GetByIdAsync(id);
             if (response == null) return NotFound();
             return Ok(response);
+        }
+
+        [HttpPost("sync-maps")]
+        public async Task<IActionResult> SyncMaps()
+        {
+            await _gameMapsManager.InitAsync();
+            return Ok("Maps synced.");
         }
     }
 }
