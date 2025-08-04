@@ -1,0 +1,31 @@
+@API_HostAddress = https://localhost:44312
+@API_RemoteHostAddress = https://marvelrivalsapi.com
+
+GET {{API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+GET {{API_HostAddress}}/api/game-maps
+Content-Type: application/json
+
+{
+  "name": "New Map",
+  "description": "A test map"
+}
+
+###
+
+GET {{API_HostAddress}}/api/heroes
+Accept: application/json
+
+###
+
+GET {{API_HostAddress}}/api/match-history
+Accept: application/json
+
+
+###
+GET {{API_RemoteHostAddress}}/api/v2/player/1737805188/match-history
+Accept: application/json
+
