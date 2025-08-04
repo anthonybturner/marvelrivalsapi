@@ -3,13 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36212.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarvelRivalsApiAPI", "MarvelRivalsApiAPI\MarvelRivalsApiAPI.csproj", "{C2D7CE94-B02C-409C-9A39-65C4C7BCFA26}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarvelRivals", "MarvelRivalsApi\MarvelRivalsApi.csproj", "{F96A059E-CDC5-4EC6-9A88-3BB5D3889D32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarvelRivalsApiAPI.TESTs", "MarvelRivalsApiAPI.TESTs\MarvelRivalsApiAPI.TESTs.csproj", "{903DD120-0A24-4BDB-86FB-2294515A4943}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarvelRivals", "API\MarvelRivals.csproj", "{F96A059E-CDC5-4EC6-9A88-3BB5D3889D32}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarvelRivals.TEST", "API.TEST\MarvelRivals.TEST.csproj", "{9AE8AE74-73CB-468D-BD3D-C33110C25D42}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarvelRivals.TEST", "MarvelRivalsApi.TEST\MarvelRivalsApi.TEST.csproj", "{9AE8AE74-73CB-468D-BD3D-C33110C25D42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,14 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C2D7CE94-B02C-409C-9A39-65C4C7BCFA26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C2D7CE94-B02C-409C-9A39-65C4C7BCFA26}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C2D7CE94-B02C-409C-9A39-65C4C7BCFA26}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C2D7CE94-B02C-409C-9A39-65C4C7BCFA26}.Release|Any CPU.Build.0 = Release|Any CPU
-		{903DD120-0A24-4BDB-86FB-2294515A4943}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{903DD120-0A24-4BDB-86FB-2294515A4943}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{903DD120-0A24-4BDB-86FB-2294515A4943}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{903DD120-0A24-4BDB-86FB-2294515A4943}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F96A059E-CDC5-4EC6-9A88-3BB5D3889D32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F96A059E-CDC5-4EC6-9A88-3BB5D3889D32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F96A059E-CDC5-4EC6-9A88-3BB5D3889D32}.Release|Any CPU.ActiveCfg = Release|Any CPU
