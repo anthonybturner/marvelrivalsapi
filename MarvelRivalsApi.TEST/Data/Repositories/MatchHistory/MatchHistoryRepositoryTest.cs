@@ -103,7 +103,6 @@ namespace MarvelRivalsApi.TEST.Data.Repositories.MatchHistory
             // Arrange
             var options = GetInMemoryOptions();
 
-
             var testUid = "player123";
             var testNewMatchHistoryUid = "player124";
 
