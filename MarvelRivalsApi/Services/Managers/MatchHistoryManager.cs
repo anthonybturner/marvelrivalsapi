@@ -2,7 +2,6 @@
 using MarvelRivalsApi.Mappings;
 using MarvelRivalsApi.Models.API;
 using MarvelRivalsApi.Services.MatchHistoryService;
-using Microsoft.EntityFrameworkCore;
 
 namespace MarvelRivalsApi.Services.Managers
 {
@@ -18,14 +17,15 @@ namespace MarvelRivalsApi.Services.Managers
             try
             {
                 MatchHistoryResponseDto response = await matchHistoryService.FetchAllAsync(playerUid, playerName);
-                if (response == null || response.MatchHistory.Count() <= 0) return;
-
-                List<MarvelRivalsApi.Models.Entities.MatchHistory> matchHistories = new();
-                foreach (var match in response.MatchHistory)
+                if (response != null && response.MatchHistory.Count > 0)
                 {
-                    matchHistories.Add(MatchHistoryMapper.ToEntity(match));
+                    List<Models.Entities.MatchHistory> matchHistories = [];
+                    foreach (var match in response.MatchHistory)
+                    {
+                        matchHistories.Add(MatchHistoryMapper.ToEntity(match));
+                    }
+                    await matchHistoryRepository.AddRangeAsync(matchHistories);
                 }
-                await matchHistoryRepository.AddRangeAsync(matchHistories);
             }
             catch (Exception ex)
             {

@@ -73,9 +73,9 @@ namespace MarvelRivalsApi.Data.Repositories.MatchHistoryRepositories
                 .FirstOrDefault();
         }
 
-        public Task<bool> HasMatchHistory(string matchUid)
+        public async Task<bool> HasMatchHistory(string matchUid)
         {
-            return dbContext.MatchHistory.AnyAsync(mh => mh.MatchUid == matchUid);
+            return await dbContext.MatchHistory.AnyAsync(mh => mh.MatchUid == matchUid);
         }
 
         public async Task<List<string?>> GetPlayersUidsAsync()
