@@ -1,54 +1,52 @@
 ﻿
 using MarvelRivals.Data;
+using MarvelRivalsApi.Data.Repositories.MatchHistory;
 using MarvelRivalsApi.Models.API;
 using MarvelRivalsApi.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace MarvelRivalsApi.Data.Repositories.MatchHistoryRepositories
+namespace MarvelRivalsApi.Data.Repositories.Matchhistory
 {
     public class MatchHistoryRepository(ApplicationDbContext dbContext) : IMatchHistoryRepository
     {
-        public async Task<IEnumerable<MatchHistory>> GetAllAsync()
+        public async Task<IEnumerable<Models.Entities.MatchHistory>> GetAllAsync()
         {
-            return await dbContext.MatchHistory.ToListAsync();
+            return await dbContext.MatchHistory.Include(mh => mh.MatchPlayer).ToListAsync();
         }
 
-        public async Task<IEnumerable<MatchHistory>> GetAllAsync(string playerUid)
+        public async Task<IEnumerable<Models.Entities.MatchHistory>> GetAllAsync(long playerUid)
         {
             return await dbContext.MatchHistory
                 .Include(mh => mh.MatchPlayer)
-                    .ThenInclude(mp => mp.PlayerHero)
+                    .ThenInclude(mp => mp != null ? mp.PlayerHero : null)
                 .Include(mh => mh.MatchPlayer)
-                    .ThenInclude(mp => mp.ScoreInfo)
+                    .ThenInclude(mp => mp != null ? mp.ScoreInfo : null)
                 .Include(mh => mh.ScoreInfo)
                 .Select(mh => mh)
-                .Where(mh => mh.MatchPlayerUid == playerUid)
+                .Where(mh => mh.MatchPlayer != null && mh.MatchPlayer.PlayerUid == playerUid)
                 .ToListAsync();
         }
 
-        public async Task<MatchHistory?> GetByIdAsync(int id)
+        public async Task<Models.Entities.MatchHistory?> GetByIdAsync(string matchUid)
         {
-            return await dbContext.MatchHistory.FirstOrDefaultAsync(mh => mh.Id == id);
+            return await dbContext.MatchHistory.FirstOrDefaultAsync(mh => mh.MatchUid == matchUid);
         }
 
-        public async Task<List<MatchHistory>> GetByIdsAsync(IEnumerable<int> ids)
-        {
-            throw new NotImplementedException();
-        }
-        public async Task AddAsync(MatchHistory matchHistory)
+     
+        public async Task AddAsync(Models.Entities.MatchHistory matchHistory)
         {
             await dbContext.MatchHistory.AddAsync(matchHistory); // Use AddAsync instead of Add
         }
 
-        public async Task AddRangeAsync(IEnumerable<MatchHistory> matchHistory)
+        public async Task AddRangeAsync(IEnumerable<Models.Entities.MatchHistory> matchHistory)
         {
             await dbContext.MatchHistory.AddRangeAsync(matchHistory);
             await dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(string matchUid)
         {
-            var match = await dbContext.MatchHistory.FindAsync(id);
+            var match = await dbContext.MatchHistory.FirstOrDefaultAsync(mh => mh.MatchUid == matchUid);
             if (match != null)
             {
                 dbContext.MatchHistory.Remove(match);
@@ -60,28 +58,28 @@ namespace MarvelRivalsApi.Data.Repositories.MatchHistoryRepositories
             await dbContext.SaveChangesAsync();
         }
 
-        public void Update(MatchHistory matchHistory)
+        public void Update(Models.Entities.MatchHistory matchHistory)
         {
             dbContext.Update(matchHistory);
         }
 
-        public string? GetPlayerUid(string playerName)
+        public async Task<long?> GetPlayerUidAsync(string playerName)
         {
-            return dbContext.MatchHistory
-                .Where(mh => mh.MatchPlayerName == playerName)
-                .Select(mh => mh.MatchPlayerUid)
-                .FirstOrDefault();
+            return await dbContext.MatchHistory
+                .Where(mh => mh.MatchPlayer != null && mh.MatchPlayer.PlayerName == playerName)
+                .Select(mh => mh.MatchPlayer != null ? mh.MatchPlayer.PlayerUid : null)
+                .FirstOrDefaultAsync();
         }
 
-        public async Task<bool> HasMatchHistory(string matchUid)
+        public async Task<bool> HasMatchHistoryAsync(string matchUid)
         {
             return await dbContext.MatchHistory.AnyAsync(mh => mh.MatchUid == matchUid);
         }
 
-        public async Task<List<string?>> GetPlayersUidsAsync()
+        public async Task<List<long?>> GetPlayersUidsAsync()
         {
             return await dbContext.MatchHistory
-                .Select(mh => mh.MatchPlayerUid)
+                .Select(mh => mh.MatchPlayer != null ? mh.MatchPlayer.PlayerUid : null)
                 .Distinct()
                 .ToListAsync();
         }
@@ -91,8 +89,8 @@ namespace MarvelRivalsApi.Data.Repositories.MatchHistoryRepositories
             return await dbContext.MatchHistory
                 .Select(mh => new PlayerInfoDto
                 {
-                    PlayerName = mh.MatchPlayerName ?? string.Empty, // Ensure non-null value
-                    PlayerUid = mh.MatchPlayerUid ?? string.Empty,   // Ensure non-null value
+                    PlayerName = mh.MatchPlayer != null ? mh.MatchPlayer.PlayerName : string.Empty, // Ensure non-null value
+                    PlayerUid = mh.MatchPlayer != null ? mh.MatchPlayer.PlayerUid : null,   // Ensure non-null value
                 })
                 .Distinct()
                 .ToListAsync();

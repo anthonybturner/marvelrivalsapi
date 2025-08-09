@@ -1,13 +1,8 @@
 ﻿using MarvelRivals.Data;
-using MarvelRivals.Services.GameMaps;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MarvelRivals.TEST.Controllers
+
+namespace MarvelRivalsApi.TEST.Controllers
 {
     public class GameMapsControllerTest
     {
@@ -26,13 +21,5 @@ namespace MarvelRivals.TEST.Controllers
             _context = new ApplicationDbContext(options); // Pass the options to the constructor
         }
 
-        [Fact]
-        public async Task FetchGameMapsFromApiAsync_Should_ReturnGameMaps()
-        {
-            var service = new GameMapsService(_httpClient, _context); // Pass required parameters
-           // var gameMaps = await service.FetchGameMapsFromApiAsync();
-           // Assert.NotNull(gameMaps);
-           // Assert.True(gameMaps.Any());
-        }
     }
 }

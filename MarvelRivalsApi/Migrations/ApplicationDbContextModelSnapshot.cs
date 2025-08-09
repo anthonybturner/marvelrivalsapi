@@ -207,11 +207,8 @@ namespace MarvelRivalsApi.Migrations
 
             modelBuilder.Entity("MarvelRivalsApi.Models.Entities.MatchHistory", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("MatchUid")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("GameModeId")
                         .HasColumnType("int");
@@ -233,22 +230,12 @@ namespace MarvelRivalsApi.Migrations
                     b.Property<int>("MatchPlayerId")
                         .HasColumnType("int");
 
-                    b.Property<string>("MatchPlayerName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MatchPlayerUid")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("MatchSeason")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("MatchTimeStamp")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("MatchUid")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MatchWinnerSide")
                         .HasColumnType("int");
@@ -265,9 +252,10 @@ namespace MarvelRivalsApi.Migrations
                     b.Property<int>("SvpUid")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("MatchUid");
 
-                    b.HasIndex("MatchPlayerId");
+                    b.HasIndex("MatchPlayerId")
+                        .IsUnique();
 
                     b.HasIndex("ScoreInfoId");
 
@@ -276,11 +264,11 @@ namespace MarvelRivalsApi.Migrations
 
             modelBuilder.Entity("MarvelRivalsApi.Models.Entities.MatchPlayer", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("MatchPlayerId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MatchPlayerId"));
 
                     b.Property<int>("Assists")
                         .HasColumnType("int");
@@ -307,13 +295,13 @@ namespace MarvelRivalsApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PlayerUid")
-                        .HasColumnType("int");
+                    b.Property<long?>("PlayerUid")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("ScoreInfoId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("MatchPlayerId");
 
                     b.HasIndex("IsWinId");
 
@@ -519,8 +507,8 @@ namespace MarvelRivalsApi.Migrations
             modelBuilder.Entity("MarvelRivalsApi.Models.Entities.MatchHistory", b =>
                 {
                     b.HasOne("MarvelRivalsApi.Models.Entities.MatchPlayer", "MatchPlayer")
-                        .WithMany()
-                        .HasForeignKey("MatchPlayerId")
+                        .WithOne("MatchHistory")
+                        .HasForeignKey("MarvelRivalsApi.Models.Entities.MatchHistory", "MatchPlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -574,6 +562,12 @@ namespace MarvelRivalsApi.Migrations
                     b.Navigation("Costumes");
 
                     b.Navigation("Transformations");
+                });
+
+            modelBuilder.Entity("MarvelRivalsApi.Models.Entities.MatchPlayer", b =>
+                {
+                    b.Navigation("MatchHistory")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

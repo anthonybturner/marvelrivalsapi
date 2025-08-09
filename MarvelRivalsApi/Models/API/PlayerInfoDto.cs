@@ -2,7 +2,14 @@
 {
     public class PlayerInfoDto
     {
-        public string? PlayerUid { get; set; }
+        public long? PlayerUid { get; set; }
         public string? PlayerName { get; set; }
+
+        public string? GetPlayerUid()
+        {
+
+
+            return PlayerUid + "";
+        }
     }
 }

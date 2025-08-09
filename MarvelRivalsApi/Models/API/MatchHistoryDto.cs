@@ -4,6 +4,9 @@ namespace MarvelRivalsApi.Models.API
 {
     public class MatchHistoryDto
     {
+        [JsonPropertyName("match_uid")]
+        public string MatchUid { get; set; } = string.Empty;
+
         [JsonPropertyName("match_map_id")]
         public int MatchMapId { get; set; }
 
@@ -18,9 +21,6 @@ namespace MarvelRivalsApi.Models.API
         [JsonPropertyName("match_season")]
         public string MatchSeason { get; set; } = string.Empty;
 
-        [JsonPropertyName("match_uid")]
-        public string MatchUid { get; set; } = string.Empty;
-
         [JsonPropertyName("match_winner_side")]
         public int MatchWinnerSide { get; set; }
 
@@ -31,7 +31,7 @@ namespace MarvelRivalsApi.Models.API
         public int SvpUid { get; set; }
 
         [JsonPropertyName("score_info")]
-        public Dictionary<string, int> ScoreInfo { get; set; } = new();
+        public Dictionary<string, int> ScoreInfo { get; set; } = [];
 
         [JsonPropertyName("match_time_stamp")]
         public long MatchTimeStamp { get; set; }
@@ -44,8 +44,6 @@ namespace MarvelRivalsApi.Models.API
 
         [JsonPropertyName("match_player")]
         public MatchPlayerDto MatchPlayer { get; set; } = new();
-        public string MatchPlayerUid { get; set; }
-        public string MatchPlayerName { get; set; }
     }
 
 }

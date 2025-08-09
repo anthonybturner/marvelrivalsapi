@@ -1,8 +1,9 @@
-﻿using MarvelRivals.Models.API;
+﻿using MarvelRivals.Data;
+using MarvelRivals.Data.Repositories.Maps;
 using MarvelRivalsApi.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace MarvelRivals.Data.Repositories.Maps
+namespace MarvelRivalsApi.Data.Repositories.Maps
 {
     public class GameMapsRepository(ApplicationDbContext context) : IGameMapsRepository
     {

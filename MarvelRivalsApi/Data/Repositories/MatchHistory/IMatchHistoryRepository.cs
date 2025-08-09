@@ -1,25 +1,26 @@
 ﻿using MarvelRivalsApi.Models.API;
 using MarvelRivalsApi.Models.Entities;
 
-namespace MarvelRivalsApi.Data.Repositories.MatchHistoryRepositories
+namespace MarvelRivalsApi.Data.Repositories.MatchHistory
 {
     public interface IMatchHistoryRepository
     {
-        Task<IEnumerable<MatchHistory>> GetAllAsync();
-        Task<IEnumerable<MatchHistory>> GetAllAsync(string matchUid);
-        Task<MatchHistory?> GetByIdAsync(int id);
-        Task<List<MatchHistory>> GetByIdsAsync(IEnumerable<int> ids);
+        Task<IEnumerable<Models.Entities.MatchHistory>> GetAllAsync();
+        Task<IEnumerable<Models.Entities.MatchHistory>> GetAllAsync(long playerUid);
+        Task<Models.Entities.MatchHistory?> GetByIdAsync(string matchUid);
 
-        Task AddAsync(MatchHistory matchHistory);
+        Task AddAsync(Models.Entities.MatchHistory matchHistory);
 
-        void Update(MatchHistory matchHistory);
-        Task DeleteAsync(int id);
-        Task AddRangeAsync(IEnumerable<MatchHistory> matchHistory);
+        void Update(Models.Entities.MatchHistory matchHistory);
+        Task DeleteAsync(string matchUid);
+        Task AddRangeAsync(IEnumerable<Models.Entities.MatchHistory> matchHistory);
 
         Task SaveChangesAsync();
-        string? GetPlayerUid(string playerName);
-        Task<bool> HasMatchHistory(string matchUid);
-        Task<List<string?>> GetPlayersUidsAsync();
+
+        Task<long?> GetPlayerUidAsync(string playerName);
+        Task<List<long?>> GetPlayersUidsAsync();
+
+        Task<bool> HasMatchHistoryAsync(string matchUid);
         Task<List<PlayerInfoDto>> GetPlayersInfoAsync();
     }
 }

@@ -6,8 +6,8 @@ namespace MarvelRivals.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): base(options){}
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){}
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -21,6 +21,9 @@ namespace MarvelRivals.Data
                     );
             });
 
+            //   modelBuilder.Entity<MatchHistory>()
+            //   .HasOne(mh => mh.MatchPlayer)
+            //    .WithMany(mp => mp.PlayerHero);
         }
 
         public DbSet<GameMap> GameMaps { get; set; }

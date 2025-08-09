@@ -5,7 +5,7 @@
 namespace MarvelRivalsApi.Migrations
 {
     /// <inheritdoc />
-    public partial class InitAll : Migration
+    public partial class InitModels : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -235,22 +235,22 @@ namespace MarvelRivalsApi.Migrations
                 name: "MatchPlayer",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    MatchPlayerId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Assists = table.Column<int>(type: "int", nullable: false),
+                    PlayerUid = table.Column<long>(type: "bigint", nullable: true),
                     Kills = table.Column<int>(type: "int", nullable: false),
                     Deaths = table.Column<int>(type: "int", nullable: false),
-                    IsWinId = table.Column<int>(type: "int", nullable: false),
+                    Assists = table.Column<int>(type: "int", nullable: false),
                     Disconnected = table.Column<bool>(type: "bit", nullable: false),
-                    PlayerUid = table.Column<int>(type: "int", nullable: false),
                     PlayerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Camp = table.Column<int>(type: "int", nullable: true),
+                    IsWinId = table.Column<int>(type: "int", nullable: false),
                     ScoreInfoId = table.Column<int>(type: "int", nullable: false),
                     PlayerHeroId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MatchPlayer", x => x.Id);
+                    table.PrimaryKey("PK_MatchPlayer", x => x.MatchPlayerId);
                     table.ForeignKey(
                         name: "FK_MatchPlayer_PlayerHero_PlayerHeroId",
                         column: x => x.PlayerHeroId,
@@ -275,14 +275,12 @@ namespace MarvelRivalsApi.Migrations
                 name: "MatchHistory",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MatchUid = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MatchMapId = table.Column<int>(type: "int", nullable: false),
                     MatchMapName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MapThumbnail = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MatchPlayDuration = table.Column<double>(type: "float", nullable: false),
                     MatchSeason = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MatchUid = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MatchWinnerSide = table.Column<int>(type: "int", nullable: false),
                     MvpUid = table.Column<int>(type: "int", nullable: false),
                     SvpUid = table.Column<int>(type: "int", nullable: false),
@@ -290,18 +288,16 @@ namespace MarvelRivalsApi.Migrations
                     MatchTimeStamp = table.Column<long>(type: "bigint", nullable: false),
                     PlayModeId = table.Column<int>(type: "int", nullable: false),
                     GameModeId = table.Column<int>(type: "int", nullable: false),
-                    MatchPlayerId = table.Column<int>(type: "int", nullable: false),
-                    MatchPlayerUid = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PlayerName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    MatchPlayerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MatchHistory", x => x.Id);
+                    table.PrimaryKey("PK_MatchHistory", x => x.MatchUid);
                     table.ForeignKey(
                         name: "FK_MatchHistory_MatchPlayer_MatchPlayerId",
                         column: x => x.MatchPlayerId,
                         principalTable: "MatchPlayer",
-                        principalColumn: "Id",
+                        principalColumn: "MatchPlayerId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_MatchHistory_ScoreInfo_ScoreInfoId",
@@ -333,7 +329,8 @@ namespace MarvelRivalsApi.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_MatchHistory_MatchPlayerId",
                 table: "MatchHistory",
-                column: "MatchPlayerId");
+                column: "MatchPlayerId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_MatchHistory_ScoreInfoId",

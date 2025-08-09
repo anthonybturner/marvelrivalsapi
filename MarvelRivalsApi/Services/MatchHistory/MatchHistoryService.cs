@@ -30,7 +30,7 @@ namespace MarvelRivalsApi.Services.MatchHistory
 
         }
 
-        public async Task<MatchHistoryResponseDto> FetchAllAsync(string playerUid, string playerName)
+        public async Task<MatchHistoryResponseDto> FetchAllAsync(long playerUid, string playerName)
         {
             var response = await _httpClient.GetAsync($"v2/player/{playerUid}/match-history");
             response.EnsureSuccessStatusCode(); // Throw an exception if the response status is not 2xx
@@ -44,29 +44,27 @@ namespace MarvelRivalsApi.Services.MatchHistory
             {
                 foreach (var match in matchHistoryResponse.MatchHistory)
                 {
-                    match.MatchPlayerUid = playerUid;
-                    match.MatchPlayerName = playerName;
+                    match.MatchPlayer.PlayerUid = playerUid;
+                    match.MatchPlayer.PlayerName = playerName;
                 }
             }
 
-            return matchHistoryResponse ?? new MatchHistoryResponseDto { MatchHistory = []};
+            return matchHistoryResponse ?? new MatchHistoryResponseDto { MatchHistory = [] };
         }
 
-        public async Task<MatchHistoryDto> FetchByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<string> FetchPlayerUid(string playerName)
+        public async Task<FindPlayerResponse?> FetchPlayerUid(string playerName)
         {
             var response = await _httpClient.GetAsync($"v1/find-player/{playerName}");
             response.EnsureSuccessStatusCode(); // Throw an exception if the response status is not 2xx
 
             var content = await response.Content.ReadAsStringAsync();
             var playerResponse = JsonSerializer.Deserialize<FindPlayerResponse>(content, _jsonSerializerOptions);
+            if (playerResponse?.PlayerUid == null)
+            {
+                throw new Exception($"PlayerUid not found for player: {playerName}");
+            }
 
-            // Ensure a non-null value is returned to avoid CS8603
-            return playerResponse?.PlayerUid ?? string.Empty;
+            return playerResponse;
         }
     }
 }

@@ -1,23 +1,34 @@
-﻿namespace MarvelRivalsApi.Models.Entities
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace MarvelRivalsApi.Models.Entities
 {
+    /// <summary>
+    /// /// <summary>
+    /// Represents a record of a match in a match-history.
+    /// </summary>
     public class MatchHistory
     {
-        public int Id { get; set; } // Primary key
+        [Key]
+        public int Id { get; set; }
+        public string MatchUid { get; set; } = string.Empty;
         public int MatchMapId { get; set; }
         public string MatchMapName { get; set; } = string.Empty;
         public string MapThumbnail { get; set; } = string.Empty;
         public double MatchPlayDuration { get; set; }
         public string MatchSeason { get; set; } = string.Empty;
-        public string MatchUid { get; set; } = string.Empty;
         public int MatchWinnerSide { get; set; }
         public int MvpUid { get; set; }
         public int SvpUid { get; set; }
-        public ScoreInfo? ScoreInfo { get; set; }
         public long MatchTimeStamp { get; set; }
         public int PlayModeId { get; set; }
         public int GameModeId { get; set; }
-        public MatchPlayer MatchPlayer { get; set; } = new();
-        public string? MatchPlayerUid { get; set; }
-        public string? MatchPlayerName { get; set; }
+        //Navigation Properties
+        public int MatchPlayerId { get; set; }
+        [ForeignKey("MatchPlayerId")]
+        public MatchPlayer? MatchPlayer { get; set; }
+
+        [ForeignKey("ScoreInfoId")]
+        public ScoreInfo? ScoreInfo { get; set; }
     }
 }

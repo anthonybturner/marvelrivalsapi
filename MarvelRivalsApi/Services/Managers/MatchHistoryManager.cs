@@ -1,4 +1,4 @@
-﻿using MarvelRivalsApi.Data.Repositories.MatchHistoryRepositories;
+﻿using MarvelRivalsApi.Data.Repositories.MatchHistory;
 using MarvelRivalsApi.Mappings;
 using MarvelRivalsApi.Models.API;
 using MarvelRivalsApi.Services.MatchHistoryService;
@@ -7,12 +7,12 @@ namespace MarvelRivalsApi.Services.Managers
 {
     public class MatchHistoryManager(IMatchHistoryService matchHistoryService, IMatchHistoryRepository matchHistoryRepository)
     {
-        public async Task InitAsync(string playerUid, string playerName)
+        public async Task InitAsync(long playerUid, string playerName)
         {
             await FetchAllMatchesAndSaveToDatabaseAsync(playerUid, playerName);
         }
 
-        public async Task FetchAllMatchesAndSaveToDatabaseAsync(string playerUid, string playerName)
+        public async Task FetchAllMatchesAndSaveToDatabaseAsync(long playerUid, string playerName)
         {
             try
             {
@@ -33,11 +33,34 @@ namespace MarvelRivalsApi.Services.Managers
             }
         }
 
-        public async Task<string> FetchPlayerUid(string playerName)
+        public async Task<long> GetPlayerUid(string playerName)
         {
             try
             {
-                return await matchHistoryService.FetchPlayerUid(playerName);
+                long? playerUid = await matchHistoryRepository.GetPlayerUidAsync(playerName);
+                playerUid ??= await FetchPlayerUid(playerName);
+                return playerUid.Value;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching player UID", ex);
+            }
+        }
+
+        public async Task<long?> FetchPlayerUid(string playerName)
+        {
+            try
+            {
+                var response = await matchHistoryService.FetchPlayerUid(playerName);
+                if (response == null || response.PlayerUid == null)
+                {
+                    throw new Exception("Player UID could not be fetched.");
+                }
+                if (long.TryParse(response.PlayerUid, out long uid))
+                {
+                    return uid;
+                }
+                return null;
             }
             catch (Exception ex)
             {
@@ -52,20 +75,17 @@ namespace MarvelRivalsApi.Services.Managers
 
             foreach (var pInfo in playerInfo)
             {
-                // Ensure playerUid and playerName are not null before calling FetchAllAsync
-                if (string.IsNullOrEmpty(pInfo.PlayerUid) || string.IsNullOrEmpty(pInfo.PlayerName))
+                if (pInfo.PlayerUid != null && !string.IsNullOrEmpty(pInfo.PlayerName))
                 {
-                    // Skip processing if either value is null or empty
-                    continue;
-                }
-                var latestMatches = await matchHistoryService.FetchAllAsync(playerUid: pInfo.PlayerUid, pInfo.PlayerName);
-                foreach (var match in latestMatches.MatchHistory)
-                {
-                    bool exists = await matchHistoryRepository.HasMatchHistory(match.MatchUid);
-                    if (!exists)
+                    var latestMatches = await matchHistoryService.FetchAllAsync(pInfo.PlayerUid.Value, pInfo.PlayerName);
+                    foreach (var match in latestMatches.MatchHistory)
                     {
-                        var entity = MatchHistoryMapper.ToEntity(match);
-                        await matchHistoryRepository.AddAsync(entity);
+                        bool exists = await matchHistoryRepository.HasMatchHistoryAsync(match.MatchUid);
+                        if (!exists)
+                        {
+                            var entity = MatchHistoryMapper.ToEntity(match);
+                            await matchHistoryRepository.AddAsync(entity);
+                        }
                     }
                 }
             }

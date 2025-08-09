@@ -2,9 +2,10 @@
 using MarvelRivals.Mappings;
 using MarvelRivals.Models.API;
 using MarvelRivals.Services.Managers;
-using MarvelRivalsApi.Data.Repositories.MatchHistoryRepositories;
+using MarvelRivalsApi.Data.Repositories.MatchHistory;
 using MarvelRivalsApi.Mappings;
 using MarvelRivalsApi.Models.API;
+using MarvelRivalsApi.Models.Entities;
 using MarvelRivalsApi.Services.Managers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,20 +20,8 @@ namespace MarvelRivalsApi.Controllers
 
         public async Task<ActionResult<IEnumerable<MatchHistoryDto>>> GetAllMatches(string playerName)
         {
-
-            var playerUid = matchHistoryRepo.GetPlayerUid(playerName);
-            if (String.IsNullOrEmpty(playerUid))
-            {
-                playerUid = await matchHistoryManager.FetchPlayerUid(playerName);
-
-                if (String.IsNullOrEmpty(playerUid))
-                {
-                    return NotFound();
-                }
-            }
-
-            var matchesDto = new List<MatchHistoryDto>();
-            var matches = await matchHistoryRepo.GetAllAsync(playerUid);
+            long playerUid = await matchHistoryManager.GetPlayerUid(playerName);
+            var matches = await (matchHistoryRepo.GetAllAsync(playerUid));
             if (matches == null || !matches.Any())
             {
                 await matchHistoryManager.FetchAllMatchesAndSaveToDatabaseAsync(playerUid, playerName);
@@ -42,7 +31,7 @@ namespace MarvelRivalsApi.Controllers
                     return NotFound();
                 }
             }
-            matchesDto = matches.Select(match => MatchHistoryMapper.ToDto(match)).ToList();
+            var matchesDto = matches.Select(match => MatchHistoryMapper.ToDto(match)).ToList();
             return Ok(matchesDto);
         }
 

@@ -4,11 +4,13 @@ using MarvelRivals.Data.Repositories.Maps;
 using MarvelRivals.Services.GameMaps;
 using MarvelRivals.Services.Heroes;
 using MarvelRivals.Services.Managers;
-using MarvelRivalsApi.Data.Repositories.MatchHistoryRepositories;
+using MarvelRivalsApi.Data.Repositories.MatchHistory;
+using MarvelRivalsApi.Data.Repositories.Maps;
 using MarvelRivalsApi.Services.Managers;
 using MarvelRivalsApi.Services.MatchHistory;
 using MarvelRivalsApi.Services.MatchHistoryService;
 using Microsoft.EntityFrameworkCore;
+using MarvelRivalsApi.Data.Repositories.Matchhistory;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -11,12 +11,12 @@ namespace MarvelRivalsApi.Mappings
         {
             return new MatchHistoryDto
             {
+                MatchUid = match.MatchUid ?? string.Empty,
                 MatchMapId = match.MatchMapId,
                 MatchMapName = match.MatchMapName ?? string.Empty,
                 MapThumbnail = match.MapThumbnail ?? string.Empty,
                 MatchPlayDuration = match.MatchPlayDuration,
                 MatchSeason = match.MatchSeason ?? string.Empty,
-                MatchUid = match.MatchUid ?? string.Empty,
                 MatchWinnerSide = match.MatchWinnerSide,
                 MvpUid = match.MvpUid,
                 SvpUid = match.SvpUid,
@@ -25,8 +25,6 @@ namespace MarvelRivalsApi.Mappings
                 PlayModeId = match.PlayModeId,
                 GameModeId = match.GameModeId,
                 MatchPlayer = CreateMatchPlayerDto(match),
-                MatchPlayerUid = match.MatchPlayerUid,
-                MatchPlayerName = match.MatchPlayerName,
             };
         }
 
@@ -78,7 +76,7 @@ namespace MarvelRivalsApi.Mappings
                         { "0", match.ScoreInfo.Zero },
                         { "1", match.ScoreInfo.One }
                                 }
-                                : new Dictionary<string, int>();
+                                : [];
         }
 
         public static MatchHistory ToEntity(MatchHistoryDto match)
@@ -99,23 +97,23 @@ namespace MarvelRivalsApi.Mappings
                 PlayModeId = match.PlayModeId,
                 GameModeId = match.GameModeId,
                 MatchPlayer = CreateMatchPlayerEntity(match),
-                MatchPlayerUid = match.MatchPlayerUid,
-                MatchPlayerName = match.MatchPlayerName,
             };
         }
 
         private static Models.Entities.ScoreInfo? CreateMatchScoreInfoEntity(MatchHistoryDto match)
         {
-            return match.ScoreInfo != null && match.ScoreInfo.ContainsKey("0") && match.ScoreInfo.ContainsKey("1")
-                                ? new Models.Entities.ScoreInfo
-                                {
-                                    Zero = match.ScoreInfo["0"],
-                                    One = match.ScoreInfo["1"]
-                                }
-                                : null;
+            if (match.ScoreInfo != null && match.ScoreInfo.TryGetValue("0", out int zeroVal) && match.ScoreInfo.TryGetValue("1", out int oneValue))
+            {
+                return new Models.Entities.ScoreInfo
+                {
+                    Zero = zeroVal,
+                    One = oneValue
+                };
+            }
+            return null;
         }
 
-        private static MatchPlayer CreateMatchPlayerEntity(MatchHistoryDto match)
+        private static MatchPlayer? CreateMatchPlayerEntity(MatchHistoryDto match)
         {
             return match.MatchPlayer != null ? new MatchPlayer
             {
@@ -128,8 +126,24 @@ namespace MarvelRivalsApi.Mappings
                 PlayerName = match.MatchPlayer.PlayerName ?? string.Empty,
                 Camp = match.MatchPlayer.Camp,
                 ScoreInfo = CreatePlayerScoreInfoEntity(match),
-                PlayerHero = CreatePlayerHeroEntity(match)
-            } : new MatchPlayer();
+                PlayerHero = CreatePlayerHeroEntity(match),
+                MatchHistory = new MatchHistory
+                {
+                    MatchUid = match.MatchUid ?? string.Empty,
+                    MatchMapId = match.MatchMapId,
+                    MatchMapName = match.MatchMapName ?? string.Empty,
+                    MapThumbnail = match.MapThumbnail ?? string.Empty,
+                    MatchPlayDuration = match.MatchPlayDuration,
+                    MatchSeason = match.MatchSeason ?? string.Empty,
+                    MatchWinnerSide = match.MatchWinnerSide,
+                    MvpUid = match.MvpUid,
+                    SvpUid = match.SvpUid,
+                    ScoreInfo = CreateMatchScoreInfoEntity(match),
+                    MatchTimeStamp = match.MatchTimeStamp,
+                    PlayModeId = match.PlayModeId,
+                    GameModeId = match.GameModeId
+                }
+            } : null;
         }
 
         private static WinInfo CreateMatchPlayerIsWinEntity(MatchHistoryDto match)
