@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MarvelRivalsApi.Models.Entities
 {
@@ -14,8 +15,12 @@ namespace MarvelRivalsApi.Models.Entities
         public string? Description { get; set; }
 
         public AdditionalFields? AdditionalFields { get; set; }
+
         // Foreign key to Hero
-        public string? HeroId { get; set; }
+        public int? HeroId { get; set; }
+
+        [ForeignKey("HeroId")]
+        public Hero? Hero { get; set; }
 
     }
 

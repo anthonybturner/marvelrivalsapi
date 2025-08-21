@@ -29,7 +29,7 @@ namespace MarvelRivalsApi.Services.Managers
             }
             catch (Exception ex)
             {
-                throw new Exception("Error fetching all maps", ex);
+                throw new Exception($"Error fetching matches for the given player uid {playerUid} and player name {playerName}", ex);
             }
         }
 

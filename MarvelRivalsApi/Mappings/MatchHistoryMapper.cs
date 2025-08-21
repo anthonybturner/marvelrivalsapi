@@ -10,7 +10,7 @@ namespace MarvelRivalsApi.Mappings
         public static MatchHistoryDto ToDto(MatchHistory match)
         {
             return new MatchHistoryDto
-            {
+            {   Id = match.Id,
                 MatchUid = match.MatchUid ?? string.Empty,
                 MatchMapId = match.MatchMapId,
                 MatchMapName = match.MatchMapName ?? string.Empty,

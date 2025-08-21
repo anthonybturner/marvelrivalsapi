@@ -16,22 +16,22 @@ namespace MarvelRivals.Data.Repositories.Heroes
                 .ToListAsync();
         }
 
-        public async Task<Hero?> GetByIdAsync(string id)
+        public async Task<Hero?> GetByIdAsync(int HeroId)
         {
             return await context.Heroes
                 .Include(h => h.Abilities)
                 .Include(h => h.Transformations)
                 .Include(h => h.Costumes)
-                .FirstOrDefaultAsync(h => h.Id == id);
+                .FirstOrDefaultAsync(h => h.HeroId == HeroId);
         }
 
-        public async Task<List<Hero>> GetByIdsAsync(IEnumerable<string> ids)
+        public async Task<List<Hero>> GetByIdsAsync(IEnumerable<int> ids)
         {
             return await context.Heroes
                 .Include(h => h.Abilities)
                 .Include(h => h.Transformations)
                 .Include(h => h.Costumes)
-                .Where(h => ids.Contains(h.Id))
+                .Where(h => ids.Contains(h.Id ?? 0)) // Ensure null-coalescing operator to handle nullable Id
                 .ToListAsync();
         }
 
@@ -45,7 +45,7 @@ namespace MarvelRivals.Data.Repositories.Heroes
             context.Heroes.Update(hero);
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(int id)
         {
             var hero = await context.Heroes.FindAsync(id);
             if (hero != null)

@@ -4,6 +4,8 @@ namespace MarvelRivalsApi.Models.API
 {
     public class MatchHistoryDto
     {
+        public int Id { get; set; }
+
         [JsonPropertyName("match_uid")]
         public string MatchUid { get; set; } = string.Empty;
 

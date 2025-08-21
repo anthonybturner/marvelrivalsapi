@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MarvelRivalsApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250808092339_InitModels")]
-    partial class InitModels
+    [Migration("20250821065825_UpdateAbilitiesAndCustomes4")]
+    partial class UpdateAbilitiesAndCustomes4
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,8 +41,8 @@ namespace MarvelRivalsApi.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("HeroId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("HeroId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Icon")
                         .HasColumnType("nvarchar(max)");
@@ -101,14 +101,14 @@ namespace MarvelRivalsApi.Migrations
                     b.Property<string>("Appearance")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CostumeId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CostumeId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("HeroId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("HeroId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Icon")
                         .HasColumnType("nvarchar(max)");
@@ -116,12 +116,14 @@ namespace MarvelRivalsApi.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Quality")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("QualityId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("HeroId");
+
+                    b.HasIndex("QualityId");
 
                     b.ToTable("Costume");
                 });
@@ -173,8 +175,11 @@ namespace MarvelRivalsApi.Migrations
 
             modelBuilder.Entity("MarvelRivalsApi.Models.Entities.Hero", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AttackType")
                         .HasColumnType("nvarchar(max)");
@@ -184,6 +189,9 @@ namespace MarvelRivalsApi.Migrations
 
                     b.Property<string>("Difficulty")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("HeroId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
@@ -210,8 +218,11 @@ namespace MarvelRivalsApi.Migrations
 
             modelBuilder.Entity("MarvelRivalsApi.Models.Entities.MatchHistory", b =>
                 {
-                    b.Property<string>("MatchUid")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("GameModeId")
                         .HasColumnType("int");
@@ -240,6 +251,10 @@ namespace MarvelRivalsApi.Migrations
                     b.Property<long>("MatchTimeStamp")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("MatchUid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("MatchWinnerSide")
                         .HasColumnType("int");
 
@@ -255,7 +270,7 @@ namespace MarvelRivalsApi.Migrations
                     b.Property<int>("SvpUid")
                         .HasColumnType("int");
 
-                    b.HasKey("MatchUid");
+                    b.HasKey("Id");
 
                     b.HasIndex("MatchPlayerId")
                         .IsUnique();
@@ -267,11 +282,11 @@ namespace MarvelRivalsApi.Migrations
 
             modelBuilder.Entity("MarvelRivalsApi.Models.Entities.MatchPlayer", b =>
                 {
-                    b.Property<int>("MatchPlayerId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MatchPlayerId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Assists")
                         .HasColumnType("int");
@@ -304,7 +319,7 @@ namespace MarvelRivalsApi.Migrations
                     b.Property<int>("ScoreInfoId")
                         .HasColumnType("int");
 
-                    b.HasKey("MatchPlayerId");
+                    b.HasKey("Id");
 
                     b.HasIndex("IsWinId");
 
@@ -383,6 +398,31 @@ namespace MarvelRivalsApi.Migrations
                     b.ToTable("PlayerScoreInfo");
                 });
 
+            modelBuilder.Entity("MarvelRivalsApi.Models.Entities.Quality", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Icon")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Value")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Quality");
+                });
+
             modelBuilder.Entity("MarvelRivalsApi.Models.Entities.ScoreInfo", b =>
                 {
                     b.Property<int>("Id")
@@ -437,8 +477,8 @@ namespace MarvelRivalsApi.Migrations
                     b.Property<string>("Health")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("HeroId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("HeroId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Icon")
                         .HasColumnType("nvarchar(max)");
@@ -449,8 +489,8 @@ namespace MarvelRivalsApi.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TransformationsId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("TransformationId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -484,18 +524,28 @@ namespace MarvelRivalsApi.Migrations
                         .WithMany()
                         .HasForeignKey("AdditionalFieldsId");
 
-                    b.HasOne("MarvelRivalsApi.Models.Entities.Hero", null)
+                    b.HasOne("MarvelRivalsApi.Models.Entities.Hero", "Hero")
                         .WithMany("Abilities")
                         .HasForeignKey("HeroId");
 
                     b.Navigation("AdditionalFields");
+
+                    b.Navigation("Hero");
                 });
 
             modelBuilder.Entity("MarvelRivalsApi.Models.Entities.Costume", b =>
                 {
-                    b.HasOne("MarvelRivalsApi.Models.Entities.Hero", null)
+                    b.HasOne("MarvelRivalsApi.Models.Entities.Hero", "Hero")
                         .WithMany("Costumes")
                         .HasForeignKey("HeroId");
+
+                    b.HasOne("MarvelRivalsApi.Models.Entities.Quality", "Quality")
+                        .WithMany()
+                        .HasForeignKey("QualityId");
+
+                    b.Navigation("Hero");
+
+                    b.Navigation("Quality");
                 });
 
             modelBuilder.Entity("MarvelRivalsApi.Models.Entities.GameMap", b =>
@@ -553,9 +603,11 @@ namespace MarvelRivalsApi.Migrations
 
             modelBuilder.Entity("MarvelRivalsApi.Models.Entities.Transformation", b =>
                 {
-                    b.HasOne("MarvelRivalsApi.Models.Entities.Hero", null)
+                    b.HasOne("MarvelRivalsApi.Models.Entities.Hero", "Hero")
                         .WithMany("Transformations")
                         .HasForeignKey("HeroId");
+
+                    b.Navigation("Hero");
                 });
 
             modelBuilder.Entity("MarvelRivalsApi.Models.Entities.Hero", b =>

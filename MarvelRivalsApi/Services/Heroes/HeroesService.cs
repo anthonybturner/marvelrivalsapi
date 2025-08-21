@@ -27,7 +27,7 @@ namespace MarvelRivals.Services.Heroes
 
         private async Task<IEnumerable<HeroDto>> FetchAllAsync()
         {
-            var response = await _httpClient.GetAsync("v1/heroes");
+            var response = await _httpClient.GetAsync("v2/heroes");
             response.EnsureSuccessStatusCode(); // Throw an exception if the response status is not 2xx
 
             // Deserialize the JSON response into a list of HeroDto

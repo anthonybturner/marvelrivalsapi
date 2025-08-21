@@ -29,7 +29,7 @@ namespace MarvelRivals.Models.API {
         [JsonPropertyName("transformation_id")]
         public string? TransformationId { get; set; }
         // Foreign key to Hero
-        public string? HeroId { get; set; }
+        public int HeroId { get; set; }
     }
     
 }

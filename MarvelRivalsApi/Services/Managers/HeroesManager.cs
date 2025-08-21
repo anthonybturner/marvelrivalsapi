@@ -18,12 +18,12 @@ namespace MarvelRivals.Services.Managers
             try
             {
                 var heroDtos = await heroesService.FetchAllAsync();
-                var ids = heroDtos.Select(h => h.Id).Where(id => id != null).Cast<string>().ToList(); // Ensure null values are filtered out and cast to non-nullable
+                var ids = heroDtos.Select(h => h.HeroId).ToList(); // Removed unnecessary null check as HeroId is non-nullable
                 var existingHeroes = await heroesRepository.GetByIdsAsync(ids);
 
                 foreach (var dto in heroDtos)
                 {
-                    var existingHero = existingHeroes.FirstOrDefault(h => h.Id == dto.Id);
+                    var existingHero = existingHeroes.FirstOrDefault(h => h.HeroId == dto.HeroId);
                     if (existingHero != null)
                     {
                         HeroMapper.UpdateEntity(existingHero, dto); // Just modifies tracked entity
@@ -39,7 +39,7 @@ namespace MarvelRivals.Services.Managers
             catch (Exception ex)
             {
                 // Handle exceptions, log errors, etc.
-                throw new Exception("Error fetching all maps", ex);
+                throw new Exception("Error fetching all Heroes", ex);
             }
         }
     }

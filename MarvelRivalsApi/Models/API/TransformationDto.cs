@@ -1,11 +1,13 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace MarvelRivals.Models.API
 {
     public class TransformationDto
     {
+
         [JsonPropertyName("id")]
-        public string? Id { get; set; }
+        public int TransformationId { get; set; }
 
         [JsonPropertyName("name")]
         public string? Name { get; set; }

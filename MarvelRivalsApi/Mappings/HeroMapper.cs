@@ -5,12 +5,11 @@ namespace MarvelRivals.Mappings
 {
     public static class HeroMapper
     {
-
         public static HeroDto ToDto(Hero hero)
         {
             HeroDto heroDto = new()
             {
-                Id = hero.Id,
+                HeroId = hero.HeroId,
                 Name = hero.Name,
                 RealName = hero.RealName,
                 ImageUrl = hero.ImageUrl,
@@ -24,15 +23,6 @@ namespace MarvelRivals.Mappings
                 Costumes = hero.Costumes?.Select(MapCostumeToDto).ToList(),
                 Transformations = hero.Transformations?.Select(MapTransformationToDto).ToList(),
             };
-
-            if (heroDto.Abilities != null) // Ensure Abilities is not null before iterating
-            {
-                foreach (var ability in heroDto.Abilities)
-                {
-                    ability.HeroId = hero.Id; // Ensure HeroId is set for each ability
-                }
-            }
-
             return heroDto;
         }
 
@@ -45,7 +35,8 @@ namespace MarvelRivals.Mappings
                 Name = a.Name,
                 Type = a.Type,
                 IsCollab = a.IsCollab,
-                Description = a.Description
+                Description = a.Description,
+                HeroId = a.HeroId ?? 0,
             };
         }
 
@@ -53,7 +44,7 @@ namespace MarvelRivals.Mappings
         {
             return new TransformationDto
             {
-                Id = t.TransformationsId,
+                TransformationId = t.TransformationId,
                 Name = t.Name,
                 Icon = t.Icon,
                 Health = t.Health,
@@ -65,19 +56,26 @@ namespace MarvelRivals.Mappings
         {
             return new CostumeDto
             {
-                Id = c.CostumeId,
+                CostumeId = c.CostumeId,
                 Name = c.Name,
                 Icon = c.Icon,
-                Quality = c.Quality,
+                Quality = c.Quality != null ? new QualityDto
+                {
+                    Name = c.Quality.Name,
+                    Color = c.Quality.Color,
+                    Value = c.Quality.Value,
+                    Icon = c.Quality.Icon
+                } : null,
                 Description = c.Description,
                 Appearance = c.Appearance,
+                HeroId = c.HeroId ?? 0,
             };
         }
         public static Hero ToEntity(HeroDto Dto)
         {
             Hero hero = new()
             {
-                Id = Dto.Id,
+                HeroId = Dto.HeroId,
                 RealName = Dto.RealName,
                 ImageUrl = Dto.ImageUrl,
                 Role = Dto.Role,
@@ -94,7 +92,7 @@ namespace MarvelRivals.Mappings
 
             foreach (var ability in hero.Abilities)
             {
-                ability.HeroId = hero.Id; // Ensure HeroId is set for each ability
+                ability.HeroId = hero.HeroId; // Ensure HeroId is set for each ability
             }
             return hero;
         }
@@ -116,7 +114,7 @@ namespace MarvelRivals.Mappings
                 existingHero.Abilities = [.. dto.Abilities.Select(MapAbilitiesToEntities)];
                 foreach (var ability in existingHero.Abilities)
                 {
-                    ability.HeroId = existingHero.Id; // Ensure HeroId is set for each ability
+                    ability.HeroId = existingHero.HeroId; // Ensure HeroId is set for each ability
                 }
             }
 
@@ -160,7 +158,7 @@ namespace MarvelRivals.Mappings
         {
             return new Transformation
             {
-                TransformationsId = t.Id,
+                TransformationId = t.TransformationId,
                 Name = t.Name,
                 Icon = t.Icon,
                 Health = t.Health,
@@ -172,10 +170,16 @@ namespace MarvelRivals.Mappings
         {
             return new Costume
             {
-                CostumeId = c.Id,
+                CostumeId = c.CostumeId,
                 Name = c.Name,
                 Icon = c.Icon,
-                Quality = c.Quality,
+                Quality = new Quality
+                {
+                    Name = c.Quality?.Name,
+                    Color = c.Quality?.Color,
+                    Value = c.Quality?.Value,
+                    Icon = c.Quality?.Icon
+                },
                 Description = c.Description,
                 Appearance = c.Appearance,
             };

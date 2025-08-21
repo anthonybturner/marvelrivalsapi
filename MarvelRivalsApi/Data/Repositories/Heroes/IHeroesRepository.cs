@@ -6,13 +6,13 @@ namespace MarvelRivals.Data.Repositories.Heroes
     public interface IHeroesRepository
     {
         Task<IEnumerable<Hero>> GetAllAsync();
-        Task<Hero?> GetByIdAsync(string id);
-        Task<List<Hero>> GetByIdsAsync(IEnumerable<string> ids);
+        Task<Hero?> GetByIdAsync(int id);
+        Task<List<Hero>> GetByIdsAsync(IEnumerable<int> ids);
 
         Task AddAsync(Hero hero);
 
         void Update(Hero hero);
-        Task DeleteAsync(string id);
+        Task DeleteAsync(int id);
         Task AddRangeAsync(IEnumerable<Hero> heroes);
 
         Task SaveChangesAsync();

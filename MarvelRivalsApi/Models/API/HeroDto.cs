@@ -5,7 +5,7 @@ namespace MarvelRivals.Models.API
     public class HeroDto
     {
         [JsonPropertyName("id")]
-        public string? Id { get; set; }
+        public int HeroId { get; set; }
 
         [JsonPropertyName("name")]
         public string? Name { get; set; }

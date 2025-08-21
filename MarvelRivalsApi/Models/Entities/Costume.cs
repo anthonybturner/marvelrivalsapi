@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MarvelRivalsApi.Models.Entities
 {
@@ -7,20 +8,25 @@ namespace MarvelRivalsApi.Models.Entities
     {
         [Key]
         public int Id { get; set; }
-
-        public string? CostumeId { get; set; }
+        public int CostumeId { get; set; }
         public string? Name { get; set; }
-
         public string? Icon { get; set; }
-
-        public string? Quality { get; set; }
-
         public string? Description { get; set; }
-
         public string? Appearance { get; set; }
 
+
+        //Navigation Properties
+      
         // Foreign key to Hero
-        public string? HeroId { get; set; }
+        public int? HeroId { get; set; }
+
+        [ForeignKey("HeroId")]
+        public Hero? Hero { get; set; }
+
+        public int? QualityId { get; set; }
+
+        [ForeignKey("QualityId")]
+        public Quality? Quality { get; set; }
 
     }
 }

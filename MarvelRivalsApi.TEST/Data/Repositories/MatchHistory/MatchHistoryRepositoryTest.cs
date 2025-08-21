@@ -25,7 +25,6 @@ namespace MarvelRivalsApi.TEST.Data.Repositories.MatchHistory
 
         }
 
-
         private static Models.Entities.MatchHistory CreateMockMatchHistory(string matchUid, string matchMapName, long playerUid, string playerName)
         {
             var matchHistory = new Models.Entities.MatchHistory
@@ -38,7 +37,7 @@ namespace MarvelRivalsApi.TEST.Data.Repositories.MatchHistory
                     PlayerName = playerName,
                     PlayerHero = new Models.Entities.PlayerHero(),
                     ScoreInfo = new Models.Entities.PlayerScoreInfo(),
-                    MatchHistory = new Models.Entities.MatchHistory()
+                    MatchHistory = null
                 }
             };
             matchHistory.MatchPlayer.MatchHistory = matchHistory;
@@ -73,10 +72,12 @@ namespace MarvelRivalsApi.TEST.Data.Repositories.MatchHistory
             var result = await repository.GetAllAsync(playerUid);
             // Assert
             // Verify that the returned list contains all match histories
-            Assert.NotNull(result?.First().MatchPlayer);
-            Assert.Single(result.ToList());
-            Assert.Equal(matchUid, result.First().MatchUid);
-            Assert.Equal(playerUid, result?.First()?.MatchPlayer?.PlayerUid);
+            var results = result.ToList();
+
+            Assert.NotNull(results[0].MatchPlayer);
+            Assert.Single(results);
+            Assert.Equal(matchUid, results[0].MatchUid);
+            Assert.Equal(playerUid, results[0].MatchPlayer?.PlayerUid);
         }
 
         [Fact]
@@ -105,24 +106,23 @@ namespace MarvelRivalsApi.TEST.Data.Repositories.MatchHistory
             // Arrange
             var options = GetInMemoryOptions();
             var matchUid = "1";
+            var matchHistory = CreateMockMatchHistory(matchUid, "Test Map Name 2", 123, "Test Player");
 
             // Act
             // Call the GetAllAsync method
-            using (var context = new ApplicationDbContext(options))
-            {
-                var matchHistory = CreateMockMatchHistory(matchUid, "Test Map Name 2", 123, "Test Player");
-                var repository = new MatchHistoryRepository(context);
-                await repository.AddAsync(matchHistory);
-                await context.SaveChangesAsync();
-                var result = await context.MatchHistory.FirstOrDefaultAsync(matchHistory => matchHistory.MatchUid == matchUid);
+            using var context = new ApplicationDbContext(options);            
+            var repository = new MatchHistoryRepository(context);
+            await repository.AddAsync(matchHistory);
+            await context.SaveChangesAsync();
+            var result = await context.MatchHistory.FirstOrDefaultAsync(matchHistory => matchHistory.MatchUid == matchUid);
 
-                // Assert
-                // Verify that the returned list contains all match histories
-                Assert.NotNull(result);
-                Assert.Equal(matchUid, result.MatchUid);
-                Assert.Equal("Test Map Name 2", result.MatchMapName);
-            }
+            // Assert
+            // Verify that the returned list contains all match histories
+            Assert.NotNull(result);
+            Assert.Equal(matchUid, result.MatchUid);
+            Assert.Equal("Test Map Name 2", result.MatchMapName);
         }
+
         [Fact]
         public async Task GetPlayerUidAsync_ShouldReturnPlayerUid_ForGivenPlayerName()
         {
@@ -180,7 +180,6 @@ namespace MarvelRivalsApi.TEST.Data.Repositories.MatchHistory
             var matchUid = "1";
             var playerName = "Test Player";
             var playerUid = 123;
-
             AddNewMatchHistoryToDatabase(options, matchUid, "Test Map Name 1", playerUid, playerName);
 
             // Act
@@ -202,9 +201,9 @@ namespace MarvelRivalsApi.TEST.Data.Repositories.MatchHistory
             var matchUid = "1";
             var playerName = "Test Player";
             var playerUid = 123;
-
             AddNewMatchHistoryToDatabase(options, matchUid, "Test Map Name 1", playerUid, playerName);
             AddNewMatchHistoryToDatabase(options, "2", "Test Map Name 2", 456, "Test Player 2");
+
             // Act
             // Call the GetAllAsync method
             using var context = new ApplicationDbContext(options);
@@ -229,10 +228,8 @@ namespace MarvelRivalsApi.TEST.Data.Repositories.MatchHistory
             var matchUid2 = "2";
             var playerName = "Test Player";
             var playerName2 = "Test Player2";
-
             var playerUid = 123;
             var playerUid2 = 456;
-
             AddNewMatchHistoryToDatabase(options, matchUid, "Test Map Name 1", playerUid, playerName);
             AddNewMatchHistoryToDatabase(options, matchUid2, "Test Map Name 1", playerUid2, playerName2);
 
@@ -245,27 +242,24 @@ namespace MarvelRivalsApi.TEST.Data.Repositories.MatchHistory
             // Assert
             Assert.NotNull(playerInfoDto);
             Assert.Equal(2, playerInfoDto.Count);
-
             Assert.Contains(playerInfoDto, p => p.PlayerName == playerName && p.PlayerUid == playerUid);
             Assert.Contains(playerInfoDto, p => p.PlayerName == playerName2 && p.PlayerUid == playerUid2);
-
         }
 
         [Fact]
-        public static async Task DeleteAsync_ShoulDeleteMatchHistory_ForGivenMatchHistoryId()
+        public async Task DeleteAsync_ShouldDeleteMatchHistory_ForGivenMatchHistoryId()
         {
             // Arrange
             var options = GetInMemoryOptions();
             var matchUid = "1";
-
             AddNewMatchHistoryToDatabase(options, matchUid, "Test Map Name", 123, "Test Player");
+
             // Act
             // Call the GetAllAsync method
             using var context = new ApplicationDbContext(options);
             var repository = new MatchHistoryRepository(context);
             await repository.DeleteAsync(matchUid);
             await context.SaveChangesAsync();
-
             var result = await context.MatchHistory.FirstOrDefaultAsync(matchHistory => matchHistory.MatchUid == matchUid);
 
             // Assert

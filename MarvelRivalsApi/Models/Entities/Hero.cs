@@ -7,9 +7,9 @@ namespace MarvelRivalsApi.Models.Entities
     public class Hero
     {
         [Key]
-        [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public string? Id { get; set; }
+        public int? Id { get; set; }
+
+        public int HeroId { get; set; }
         
         public string? Name { get; set; }
 

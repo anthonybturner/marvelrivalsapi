@@ -20,22 +20,9 @@ namespace MarvelRivals.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Hero>> GetHero(string id)
+        public async Task<ActionResult<Hero>> GetHero(int id)
         {
-            if (String.IsNullOrEmpty(id))
-            {
-                return BadRequest(new
-                {
-                    type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
-                    title = "One or more validation errors occurred.",
-                    status = 400,
-                    errors = new
-                    {
-                        Id = new[] { $"The value '{id}' is not valid." }
-                    }
-                });
-            }
-
+                    
             var response = await heroesRepository.GetByIdAsync(id);
             if (response == null) { return NotFound(); }
             return Ok(response);
