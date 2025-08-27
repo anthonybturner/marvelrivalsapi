@@ -1,11 +1,7 @@
-﻿using MarvelRivals.Data.Repositories.Maps;
-using MarvelRivals.Mappings;
-using MarvelRivals.Models.API;
-using MarvelRivals.Services.Managers;
+﻿
 using MarvelRivalsApi.Data.Repositories.MatchHistory;
 using MarvelRivalsApi.Mappings;
 using MarvelRivalsApi.Models.API;
-using MarvelRivalsApi.Models.Entities;
 using MarvelRivalsApi.Services.Managers;
 using Microsoft.AspNetCore.Mvc;
 

@@ -14,9 +14,13 @@ namespace MarvelRivalsApi.Models.Entities
         public bool IsCollab { get; set; }
         public string? Description { get; set; }
 
-        public AdditionalFields? AdditionalFields { get; set; }
 
         // Foreign key to Hero
+        public int? AdditionalFieldsId { get; set; }
+
+        [ForeignKey("AdditionalFieldsId")]
+        public AdditionalFields? AdditionalFields { get; set; }
+
         public int? HeroId { get; set; }
 
         [ForeignKey("HeroId")]

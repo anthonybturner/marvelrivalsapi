@@ -24,7 +24,7 @@ namespace MarvelRivals.Models.API {
         public string? Description { get; set; }
 
         [JsonPropertyName("additional_fields")]
-        public Dictionary<string, string>? AdditionalFields { get; set; }
+        public AdditionalFieldsDto? AdditionalFields { get; set; }
 
         [JsonPropertyName("transformation_id")]
         public string? TransformationId { get; set; }

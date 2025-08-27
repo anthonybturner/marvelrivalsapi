@@ -1,7 +1,5 @@
-﻿using MarvelRivals.Models.API;
-using MarvelRivalsApi.Models.Entities;
+﻿using MarvelRivalsApi.Models.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace MarvelRivals.Data.Repositories.Heroes
 {

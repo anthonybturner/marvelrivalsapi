@@ -1,5 +1,6 @@
 ﻿using MarvelRivals.Models.API;
 using MarvelRivalsApi.Models.Entities;
+using System.Text.Json;
 
 namespace MarvelRivals.Mappings
 {
@@ -36,6 +37,15 @@ namespace MarvelRivals.Mappings
                 Type = a.Type,
                 IsCollab = a.IsCollab,
                 Description = a.Description,
+                AdditionalFields = a.AdditionalFields != null ? new AdditionalFieldsDto
+                {
+                    Key = a.AdditionalFields.Key,
+                    EnergyCost = a.AdditionalFields.EnergyCost,
+                    EnergyRecoverySpeed = a.AdditionalFields.EnergyRecoverySpeed,
+                    MaximumEnergy = a.AdditionalFields.MaximumEnergy,
+                    ExtraFields = a.AdditionalFields.ExtraFieldsJson != null ? JsonSerializer.Deserialize<Dictionary<string, object>>(a.AdditionalFields.ExtraFieldsJson) : null,
+                    MovementBoost = a.AdditionalFields.MovementBoost,
+                } : null,
                 HeroId = a.HeroId ?? 0,
             };
         }
@@ -89,11 +99,6 @@ namespace MarvelRivals.Mappings
                 Abilities = Dto.Abilities != null ? [.. Dto.Abilities.Select(a => MapAbilitiesToEntities(a))] : [],
                 Transformations = Dto.Transformations != null ? [.. Dto.Transformations.Select(t => MapTransformationsToEntities(t))] : [],
             };
-
-            foreach (var ability in hero.Abilities)
-            {
-                ability.HeroId = hero.HeroId; // Ensure HeroId is set for each ability
-            }
             return hero;
         }
 
@@ -129,18 +134,6 @@ namespace MarvelRivals.Mappings
             }
         }
 
-
-        public static AdditionalFields MapAdditionalFields(Dictionary<string, string>? additionalFields)
-        {
-            return additionalFields != null ? new AdditionalFields
-            {
-                Key = additionalFields.TryGetValue("Key", out string? value) ? value : null,
-                Casting = additionalFields.TryGetValue("Casting", out string? castValue) ? castValue : null,
-                EnergyCost = additionalFields.TryGetValue("Energy Cost", out string? energyValue) ? energyValue : null,
-                SpecialEffect = additionalFields.TryGetValue("Special Effect", out string? effectValue) ? effectValue : null
-            } : new AdditionalFields { };
-        }
-
         public static Ability MapAbilitiesToEntities(AbilityDto a)
         {
             return new Ability
@@ -151,7 +144,15 @@ namespace MarvelRivals.Mappings
                 Type = a.Type,
                 IsCollab = a.IsCollab,
                 Description = a.Description,
-                AdditionalFields = MapAdditionalFields(a.AdditionalFields)
+                AdditionalFields = a.AdditionalFields != null ? new AdditionalFields
+                {
+                    Key = a.AdditionalFields.Key,
+                    EnergyCost = a.AdditionalFields.EnergyCost,
+                    EnergyRecoverySpeed = a.AdditionalFields.EnergyRecoverySpeed,
+                    MaximumEnergy = a.AdditionalFields.MaximumEnergy,
+                    MovementBoost = a.AdditionalFields.MovementBoost,
+                    ExtraFieldsJson = a.AdditionalFields?.ExtraFields != null ? JsonSerializer.Serialize(a.AdditionalFields.ExtraFields) : null
+                } : null,
             };
         }
         public static Transformation MapTransformationsToEntities(TransformationDto t)

@@ -5,7 +5,7 @@
 namespace MarvelRivalsApi.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateAbilitiesAndCustomes3 : Migration
+    public partial class UpdateAbilitiesAdditionalFieldsExta : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +19,12 @@ namespace MarvelRivalsApi.Migrations
                     Key = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Casting = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EnergyCost = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SpecialEffect = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    MaximumEnergy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MovementBoost = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EnergyRecoverySpeed = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SpecialEffect = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ExtraFieldsJson = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AbilityId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -84,6 +89,22 @@ namespace MarvelRivalsApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PlayerScoreInfo", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Quality",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Color = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Value = table.Column<int>(type: "int", nullable: true),
+                    Icon = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Quality", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -160,30 +181,6 @@ namespace MarvelRivalsApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Costume",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CostumeId = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Icon = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Quality = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Appearance = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    HeroId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Costume", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Costume_Heroes_HeroId",
-                        column: x => x.HeroId,
-                        principalTable: "Heroes",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Transformation",
                 columns: table => new
                 {
@@ -203,6 +200,35 @@ namespace MarvelRivalsApi.Migrations
                         name: "FK_Transformation_Heroes_HeroId",
                         column: x => x.HeroId,
                         principalTable: "Heroes",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Costume",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CostumeId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Icon = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Appearance = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HeroId = table.Column<int>(type: "int", nullable: true),
+                    QualityId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Costume", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Costume_Heroes_HeroId",
+                        column: x => x.HeroId,
+                        principalTable: "Heroes",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Costume_Quality_QualityId",
+                        column: x => x.QualityId,
+                        principalTable: "Quality",
                         principalColumn: "Id");
                 });
 
@@ -313,7 +339,9 @@ namespace MarvelRivalsApi.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Ability_AdditionalFieldsId",
                 table: "Ability",
-                column: "AdditionalFieldsId");
+                column: "AdditionalFieldsId",
+                unique: true,
+                filter: "[AdditionalFieldsId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ability_HeroId",
@@ -324,6 +352,11 @@ namespace MarvelRivalsApi.Migrations
                 name: "IX_Costume_HeroId",
                 table: "Costume",
                 column: "HeroId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Costume_QualityId",
+                table: "Costume",
+                column: "QualityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GameMaps_SubMapId",
@@ -382,6 +415,9 @@ namespace MarvelRivalsApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "AdditionalFields");
+
+            migrationBuilder.DropTable(
+                name: "Quality");
 
             migrationBuilder.DropTable(
                 name: "SubMap");

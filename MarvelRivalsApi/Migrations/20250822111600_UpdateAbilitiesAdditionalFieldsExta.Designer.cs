@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MarvelRivalsApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250821065825_UpdateAbilitiesAndCustomes4")]
-    partial class UpdateAbilitiesAndCustomes4
+    [Migration("20250822111600_UpdateAbilitiesAdditionalFieldsExta")]
+    partial class UpdateAbilitiesAdditionalFieldsExta
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,7 +58,9 @@ namespace MarvelRivalsApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdditionalFieldsId");
+                    b.HasIndex("AdditionalFieldsId")
+                        .IsUnique()
+                        .HasFilter("[AdditionalFieldsId] IS NOT NULL");
 
                     b.HasIndex("HeroId");
 
@@ -73,13 +75,28 @@ namespace MarvelRivalsApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("AbilityId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Casting")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EnergyCost")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("EnergyRecoverySpeed")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExtraFieldsJson")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Key")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MaximumEnergy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MovementBoost")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SpecialEffect")
@@ -521,8 +538,8 @@ namespace MarvelRivalsApi.Migrations
             modelBuilder.Entity("MarvelRivalsApi.Models.Entities.Ability", b =>
                 {
                     b.HasOne("MarvelRivalsApi.Models.Entities.AdditionalFields", "AdditionalFields")
-                        .WithMany()
-                        .HasForeignKey("AdditionalFieldsId");
+                        .WithOne("Ability")
+                        .HasForeignKey("MarvelRivalsApi.Models.Entities.Ability", "AdditionalFieldsId");
 
                     b.HasOne("MarvelRivalsApi.Models.Entities.Hero", "Hero")
                         .WithMany("Abilities")
@@ -608,6 +625,11 @@ namespace MarvelRivalsApi.Migrations
                         .HasForeignKey("HeroId");
 
                     b.Navigation("Hero");
+                });
+
+            modelBuilder.Entity("MarvelRivalsApi.Models.Entities.AdditionalFields", b =>
+                {
+                    b.Navigation("Ability");
                 });
 
             modelBuilder.Entity("MarvelRivalsApi.Models.Entities.Hero", b =>
