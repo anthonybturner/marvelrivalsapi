@@ -35,7 +35,7 @@ namespace MarvelRivalsApi.Controllers
         public async Task<IActionResult> SyncMatches()
         {
             await matchHistoryManager.SyncMatchHistoryToDatabaseAsync();
-            return Ok("Matchess synced.");
+            return Ok("Matches synced.");
         }
     }
 }
