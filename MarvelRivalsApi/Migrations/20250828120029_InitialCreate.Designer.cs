@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MarvelRivalsApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250827233238_InitialCreate2")]
-    partial class InitialCreate2
+    [Migration("20250828120029_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
