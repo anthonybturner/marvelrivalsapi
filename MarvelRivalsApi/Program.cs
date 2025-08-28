@@ -65,7 +65,7 @@ builder.Services.AddHttpClient<IMatchHistoryService, MatchHistoryService>(client
 
 
 var app = builder.Build();
-app.UseCors("AllowAngularApp");
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -75,7 +75,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseRouting();
+app.UseCors("AllowAngularApp");
 app.UseAuthorization();
 
 app.MapControllers();
