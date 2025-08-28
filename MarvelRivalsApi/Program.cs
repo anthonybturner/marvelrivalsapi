@@ -35,6 +35,17 @@ builder.Services.AddSwaggerGen(c =>
     c.CustomSchemaIds(type => type.FullName);
     c.SwaggerDoc("v1", new() { Title = "My API", Version = "v1" });
 });
+
+var baseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
+var connectionString = baseConnectionString
+    .Replace("<SERVER_HOST>", Environment.GetEnvironmentVariable("SERVER_HOST") ?? "<default-host>")
+    .Replace("<SERVER_DB>", Environment.GetEnvironmentVariable("SERVER_DB") ?? "<default-db>")
+    .Replace("<SERVER_USER>", Environment.GetEnvironmentVariable("SERVER_USER") ?? "<default-user>")
+    .Replace("<SERVER_PASSWORD>", Environment.GetEnvironmentVariable("SERVER_PASSWORD") ?? "<default-password>");
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(connectionString));
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
