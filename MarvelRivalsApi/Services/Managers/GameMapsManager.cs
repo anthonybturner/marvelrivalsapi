@@ -6,8 +6,17 @@ using MarvelRivalsApi.Models.Entities;
 
 namespace MarvelRivals.Services.Managers
 {
-    public class GameMapsManager(IGameMapsService gameMapsService, IGameMapsRepository gameMapsRepository)
+    public class GameMapsManager
     {
+        private readonly IGameMapsService gameMapsService;
+        private readonly IGameMapsRepository gameMapsRepository;
+
+        public GameMapsManager(IGameMapsService gameMapsService, IGameMapsRepository gameMapsRepository)
+        {
+            this.gameMapsService = gameMapsService;
+            this.gameMapsRepository = gameMapsRepository;
+        }
+
         public async Task InitAsync()
         {
             await FetchAllMapsAndSaveToDatabaseAsync();

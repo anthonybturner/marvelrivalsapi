@@ -37,7 +37,7 @@ namespace MarvelRivals.Services.GameMaps
             var content = await response.Content.ReadAsStringAsync();
             var maps = JsonSerializer.Deserialize<GameMapResponseDto>(content, _jsonSerializerOptions);
 
-            return maps ?? new GameMapResponseDto { Maps = [], TotalMaps = 0 };
+            return maps ?? new GameMapResponseDto { Maps = new List<GameMapDto>(), TotalMaps = 0 };
         }
 
         public async Task<GameMapDto> FetchByIdAsync(int id)

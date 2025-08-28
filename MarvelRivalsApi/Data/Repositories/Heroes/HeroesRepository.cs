@@ -3,8 +3,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MarvelRivals.Data.Repositories.Heroes
 {
-    public class HeroesRepository(ApplicationDbContext context) : IHeroesRepository
+    public class HeroesRepository : IHeroesRepository
     {
+        private readonly ApplicationDbContext context;
+
+        public HeroesRepository(ApplicationDbContext context)
+        {
+            this.context = context;
+        }
+
         public async Task<IEnumerable<Hero>> GetAllAsync()
         {
             return await context.Heroes

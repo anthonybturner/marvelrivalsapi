@@ -23,7 +23,7 @@ namespace MarvelRivals.Mappings
                     Thumbnail = map.SubMap.Thumbnail
                 } : null,
                 Video = map.Video,
-                Images = map.Images ?? []
+                Images = map.Images ?? new List<string>()
             };
         }
 
@@ -45,7 +45,7 @@ namespace MarvelRivals.Mappings
                     Thumbnail = map.SubMap.Thumbnail
                 } : null,
                 Video = map.Video,
-                Images = map.Images ?? []
+                Images = map.Images ?? new List<string>()
             };
         }
     }

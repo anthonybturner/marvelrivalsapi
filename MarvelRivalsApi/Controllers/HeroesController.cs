@@ -9,8 +9,17 @@ namespace MarvelRivals.Controllers
 {
     [ApiController]
     [Route("api/heroes")]
-    public class HeroesController(IHeroesRepository heroesRepository, HeroesManager heroesManager) : ControllerBase
+    public class HeroesController : ControllerBase
     {
+        private readonly IHeroesRepository heroesRepository;
+        private readonly HeroesManager heroesManager;
+
+        public HeroesController(IHeroesRepository heroesRepository, HeroesManager heroesManager)
+        {
+            this.heroesRepository = heroesRepository;
+            this.heroesManager = heroesManager;
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<HeroDto>>> GetAllHeroes()
         {

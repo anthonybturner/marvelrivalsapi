@@ -6,8 +6,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MarvelRivals.Services.Managers
 {
-    public class HeroesManager(IHeroesService heroesService, IHeroesRepository heroesRepository)
+    public class HeroesManager
     {
+        private readonly IHeroesService heroesService;
+        private readonly IHeroesRepository heroesRepository;
+
+        public HeroesManager(IHeroesService heroesService, IHeroesRepository heroesRepository)
+        {
+            this.heroesService = heroesService;
+            this.heroesRepository = heroesRepository;
+        }
+
         public async Task InitAsync()
         {
             await FetchAllHeroesAndSaveToDatabaseAsync();

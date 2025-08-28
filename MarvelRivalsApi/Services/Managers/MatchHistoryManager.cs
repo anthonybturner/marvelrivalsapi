@@ -5,8 +5,17 @@ using MarvelRivalsApi.Services.MatchHistoryService;
 
 namespace MarvelRivalsApi.Services.Managers
 {
-    public class MatchHistoryManager(IMatchHistoryService matchHistoryService, IMatchHistoryRepository matchHistoryRepository)
+    public class MatchHistoryManager
     {
+        private readonly IMatchHistoryService matchHistoryService;
+        private readonly IMatchHistoryRepository matchHistoryRepository;
+
+        public MatchHistoryManager(IMatchHistoryService matchHistoryService, IMatchHistoryRepository matchHistoryRepository)
+        {
+            this.matchHistoryService = matchHistoryService;
+            this.matchHistoryRepository = matchHistoryRepository;
+        }
+
         public async Task InitAsync(long playerUid, string playerName)
         {
             await FetchAllMatchesAndSaveToDatabaseAsync(playerUid, playerName);
@@ -19,7 +28,7 @@ namespace MarvelRivalsApi.Services.Managers
                 MatchHistoryResponseDto response = await matchHistoryService.FetchAllAsync(playerUid, playerName);
                 if (response != null && response.MatchHistory.Count > 0)
                 {
-                    List<Models.Entities.MatchHistory> matchHistories = [];
+                    List<Models.Entities.MatchHistory> matchHistories = new List<Models.Entities.MatchHistory>();
                     foreach (var match in response.MatchHistory)
                     {
                         matchHistories.Add(MatchHistoryMapper.ToEntity(match));

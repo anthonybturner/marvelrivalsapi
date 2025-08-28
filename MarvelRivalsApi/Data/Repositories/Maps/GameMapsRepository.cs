@@ -5,8 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MarvelRivalsApi.Data.Repositories.Maps
 {
-    public class GameMapsRepository(ApplicationDbContext context) : IGameMapsRepository
+    public class GameMapsRepository : IGameMapsRepository
     {
+        private readonly ApplicationDbContext context;
+
+        public GameMapsRepository(ApplicationDbContext context)
+        {
+            this.context = context;
+        }
+
         public async Task<IEnumerable<GameMap>> GetAllAsync()
         {
             return await context.GameMaps.ToListAsync();

@@ -12,6 +12,11 @@ namespace MarvelRivalsApi.Models.Entities
     /// </summary>
     public class MatchPlayer
     {
+        public MatchPlayer()
+        {
+            MatchHistory = new MatchHistory();
+        }
+
         [Key]
         public int Id { get; set; }
         public long? PlayerUid { get; set; }
@@ -23,7 +28,7 @@ namespace MarvelRivalsApi.Models.Entities
         public int? Camp { get; set; }
 
         //Navigation Properties
-        public required MatchHistory MatchHistory { get; set; }
+        public MatchHistory MatchHistory { get; set; }
         public int IsWinId { get; set; }
         [ForeignKey("IsWinId")]
         public WinInfo IsWin { get; set; } = new();

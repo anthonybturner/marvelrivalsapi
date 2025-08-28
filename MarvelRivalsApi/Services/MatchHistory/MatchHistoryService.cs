@@ -49,7 +49,7 @@ namespace MarvelRivalsApi.Services.MatchHistory
                 }
             }
 
-            return matchHistoryResponse ?? new MatchHistoryResponseDto { MatchHistory = [] };
+            return matchHistoryResponse ?? new MatchHistoryResponseDto { MatchHistory = new List<MatchHistoryDto>() };
         }
 
         public async Task<FindPlayerResponse?> FetchPlayerUid(string playerName)

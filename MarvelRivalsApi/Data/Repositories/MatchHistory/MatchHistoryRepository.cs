@@ -7,8 +7,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MarvelRivalsApi.Data.Repositories.Matchhistory
 {
-    public class MatchHistoryRepository(ApplicationDbContext dbContext) : IMatchHistoryRepository
+    public class MatchHistoryRepository : IMatchHistoryRepository
     {
+        private readonly ApplicationDbContext dbContext;
+
+        public MatchHistoryRepository(ApplicationDbContext dbContext)
+        {
+            this.dbContext = dbContext;
+        }
+
         public async Task<IEnumerable<Models.Entities.MatchHistory>> GetAllAsync()
         {
             return await dbContext.MatchHistory.Include(mh => mh.MatchPlayer).ToListAsync();

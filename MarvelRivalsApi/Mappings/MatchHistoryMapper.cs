@@ -76,7 +76,7 @@ namespace MarvelRivalsApi.Mappings
                         { "0", match.ScoreInfo.Zero },
                         { "1", match.ScoreInfo.One }
                                 }
-                                : [];
+                                : new Dictionary<string, int>();
         }
 
         public static MatchHistory ToEntity(MatchHistoryDto match)

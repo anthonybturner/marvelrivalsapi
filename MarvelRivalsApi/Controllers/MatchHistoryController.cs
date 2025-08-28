@@ -9,8 +9,16 @@ namespace MarvelRivalsApi.Controllers
 {
     [ApiController]
     [Route("api/match-history")]
-    public class MatchHistoryController(IMatchHistoryRepository matchHistoryRepo, MatchHistoryManager matchHistoryManager) : ControllerBase
+    public class MatchHistoryController : ControllerBase
     {
+        private readonly IMatchHistoryRepository matchHistoryRepo;
+        private readonly MatchHistoryManager matchHistoryManager;
+
+        public MatchHistoryController(IMatchHistoryRepository matchHistoryRepo, MatchHistoryManager matchHistoryManager)
+        {
+            this.matchHistoryRepo = matchHistoryRepo;
+            this.matchHistoryManager = matchHistoryManager;
+        }
 
         [HttpGet("{playerName}")]
 

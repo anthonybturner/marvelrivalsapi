@@ -33,7 +33,7 @@ namespace MarvelRivals.Services.Heroes
             // Deserialize the JSON response into a list of HeroDto
             var content = await response.Content.ReadAsStringAsync();
             var heroes = JsonSerializer.Deserialize<IEnumerable<HeroDto>>(content, _jsonSerializerOptions);
-            return heroes ?? [];
+            return heroes ?? new List<HeroDto>();
         }
 
         public Task<HeroDto?> FetchByIdAsync(int id)

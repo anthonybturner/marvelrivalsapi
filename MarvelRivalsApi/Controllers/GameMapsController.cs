@@ -11,8 +11,17 @@ namespace MarvelRivals.Controllers
     //- `GET /api/game-maps/5` to get the map with ID 5
     [ApiController]
     [Route("api/game-maps")]
-    public class GameMapsController(IGameMapsRepository gameMapsRepo, GameMapsManager gameMapsManager) : ControllerBase
+    public class GameMapsController : ControllerBase
     {
+        private readonly IGameMapsRepository gameMapsRepo;
+        private readonly GameMapsManager gameMapsManager;
+
+        public GameMapsController(IGameMapsRepository gameMapsRepo, GameMapsManager gameMapsManager)
+        {
+            this.gameMapsRepo = gameMapsRepo;
+            this.gameMapsManager = gameMapsManager;
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GameMapDto>>> GetAllMaps()
         {

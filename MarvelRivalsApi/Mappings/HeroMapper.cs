@@ -95,9 +95,9 @@ namespace MarvelRivals.Mappings
                 Lore = Dto.Lore,
                 Team = Dto.Team,
                 // Map Transformations from HeroDto to Hero
-                Costumes = Dto.Costumes != null ? [.. Dto.Costumes.Select(c => MapCostumesToEntities(c))] : [],
-                Abilities = Dto.Abilities != null ? [.. Dto.Abilities.Select(a => MapAbilitiesToEntities(a))] : [],
-                Transformations = Dto.Transformations != null ? [.. Dto.Transformations.Select(t => MapTransformationsToEntities(t))] : [],
+                Costumes = Dto.Costumes != null ? Dto.Costumes.Select(c => MapCostumesToEntities(c)).ToList() : new List<Costume>(),
+                Abilities = Dto.Abilities != null ? Dto.Abilities.Select(a => MapAbilitiesToEntities(a)).ToList() : new List<Ability>(),
+                Transformations = Dto.Transformations != null ? Dto.Transformations.Select(t => MapTransformationsToEntities(t)).ToList() : new List<Transformation>(),
             };
             return hero;
         }
@@ -116,7 +116,7 @@ namespace MarvelRivals.Mappings
 
             if (dto.Abilities != null)
             {
-                existingHero.Abilities = [.. dto.Abilities.Select(MapAbilitiesToEntities)];
+                existingHero.Abilities = dto.Abilities.Select(MapAbilitiesToEntities).ToList();
                 foreach (var ability in existingHero.Abilities)
                 {
                     ability.HeroId = existingHero.HeroId; // Ensure HeroId is set for each ability
@@ -125,12 +125,12 @@ namespace MarvelRivals.Mappings
 
             if (dto.Transformations != null)
             {
-                existingHero.Transformations = [.. dto.Transformations.Select(MapTransformationsToEntities)];
+                existingHero.Transformations = dto.Transformations.Select(MapTransformationsToEntities).ToList();
             }
 
             if (dto.Costumes != null)
             {
-                existingHero.Costumes = [.. dto.Costumes.Select(MapCostumesToEntities)];
+                existingHero.Costumes = dto.Costumes.Select(MapCostumesToEntities).ToList();
             }
         }
 

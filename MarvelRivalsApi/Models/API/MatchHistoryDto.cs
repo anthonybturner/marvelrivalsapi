@@ -33,7 +33,7 @@ namespace MarvelRivalsApi.Models.API
         public int SvpUid { get; set; }
 
         [JsonPropertyName("score_info")]
-        public Dictionary<string, int> ScoreInfo { get; set; } = [];
+        public Dictionary<string, int> ScoreInfo { get; set; } = new Dictionary<string, int>();
 
         [JsonPropertyName("match_time_stamp")]
         public long MatchTimeStamp { get; set; }

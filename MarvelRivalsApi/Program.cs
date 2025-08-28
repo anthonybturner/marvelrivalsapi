@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using MarvelRivalsApi.Data.Repositories.Matchhistory;
 
 var builder = WebApplication.CreateBuilder(args);
-string? apiBaseUrl = builder.Configuration["ExternalApi:BaseUrl"] ?? "";
+string? apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "";
 
 builder.Services.AddCors(options =>
 {
@@ -30,11 +30,11 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.CustomSchemaIds(type => type.FullName);
-    c.SwaggerDoc("v1", new() { Title = "My API", Version = "v1" });
-});
+//builder.Services.AddSwaggerGen(c =>
+//{
+//    c.CustomSchemaIds(type => type.FullName);
+//    c.SwaggerDoc("v1", new() { Title = "My API", Version = "v1" });
+//});
 
 var baseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
 //var connectionString = baseConnectionString
@@ -83,8 +83,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1")); // Add this line
+   // app.UseSwagger();
+    //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1")); // Add this line
 }
 
 app.UseHttpsRedirection();
