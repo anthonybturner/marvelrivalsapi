@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using MarvelRivalsApi.Data.Repositories.Matchhistory;
 
 var builder = WebApplication.CreateBuilder(args);
+string? apiBaseUrl = builder.Configuration["ExternalApi:BaseUrl"] ?? "";
 
 builder.Services.AddCors(options =>
 {
@@ -50,17 +51,18 @@ builder.Services.AddScoped<GameMapsManager>();
 builder.Services.AddScoped<HeroesManager>();
 builder.Services.AddScoped<MatchHistoryManager>();
 
+
 builder.Services.AddHttpClient<IHeroesService, HeroesService>(client =>
 {
-    client.BaseAddress = new Uri("https://marvelrivalsapi.com/api/"); // Replace with the actual base URL of the API
+    client.BaseAddress = new Uri(apiBaseUrl); // Replace with the actual base URL of the API
 });
 builder.Services.AddHttpClient<IGameMapsService, GameMapsService>(client =>
 {
-    client.BaseAddress = new Uri("https://marvelrivalsapi.com/api/"); // Replace with the actual base URL of the API
+    client.BaseAddress = new Uri(apiBaseUrl); // Replace with the actual base URL of the API
 });
 builder.Services.AddHttpClient<IMatchHistoryService, MatchHistoryService>(client =>
 {
-    client.BaseAddress = new Uri("https://marvelrivalsapi.com/api/"); // Replace with the actual base URL of the API
+    client.BaseAddress = new Uri(apiBaseUrl); // Replace with the actual base URL of the API
 });
 
 
