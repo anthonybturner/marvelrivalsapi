@@ -11,34 +11,39 @@ using MarvelRivalsApi.Services.MatchHistory;
 using MarvelRivalsApi.Services.MatchHistoryService;
 using Microsoft.EntityFrameworkCore;
 using MarvelRivalsApi.Data.Repositories.Matchhistory;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
+// Allow Angular app
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngularApp",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:4200", "https://mruiweb.onrender.com" )
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
+    options.AddPolicy("AllowAngularApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200", "https://mruiweb.onrender.com")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
 });
 
-// Add services to the container.
+// Add services
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen(c =>
-//{
-//    c.CustomSchemaIds(type => type.FullName);
-//    c.SwaggerDoc("v1", new() { Title = "My API", Version = "v1" });
-//});
-//var connectionString = "Host=postgres.railway.internal;Port=5432;Database=marvelrivalsdb;Username=postgres;Password=VKthNrcIaBaTbgJlGAcpMqJKhLsMXyDd";
+builder.Services.AddSwaggerGen(c =>
+{
+    c.CustomSchemaIds(type => type.FullName);
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Marvel Rivals API",
+        Version = "v1",
+        Description = "Backend API for Marvel Rivals data (Heroes, Maps, Match History)"
+    });
+});
+
+// Connection string
 var rawConnString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 if (string.IsNullOrEmpty(rawConnString))
@@ -54,11 +59,10 @@ var baseConnectionString = rawConnString
     .Replace("<SERVER_PASSWORD>", Environment.GetEnvironmentVariable("SERVER_PASSWORD") ?? "password")
     .Replace("<SERVER_PORT>", Environment.GetEnvironmentVariable("SERVER_PORT") ?? "5432");
 
-;
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(baseConnectionString));
 
+// Repositories & Services
 builder.Services.AddScoped<IHeroesService, HeroesService>();
 builder.Services.AddScoped<IGameMapsService, GameMapsService>();
 builder.Services.AddScoped<IMatchHistoryService, MatchHistoryService>();
@@ -67,42 +71,45 @@ builder.Services.AddScoped<IGameMapsRepository, GameMapsRepository>();
 builder.Services.AddScoped<IHeroesRepository, HeroesRepository>();
 builder.Services.AddScoped<IMatchHistoryRepository, MatchHistoryRepository>();
 
-
 builder.Services.AddScoped<GameMapsManager>();
 builder.Services.AddScoped<HeroesManager>();
 builder.Services.AddScoped<MatchHistoryManager>();
 
+// Http Clients
 string apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "";
 builder.Services.AddHttpClient<IHeroesService, HeroesService>(client =>
 {
-    client.BaseAddress = new Uri(apiBaseUrl); // Replace with the actual base URL of the API
+    client.BaseAddress = new Uri(apiBaseUrl);
 });
 builder.Services.AddHttpClient<IGameMapsService, GameMapsService>(client =>
 {
-    client.BaseAddress = new Uri(apiBaseUrl); // Replace with the actual base URL of the API
+    client.BaseAddress = new Uri(apiBaseUrl);
 });
 builder.Services.AddHttpClient<IMatchHistoryService, MatchHistoryService>(client =>
 {
-    client.BaseAddress = new Uri(apiBaseUrl); // Replace with the actual base URL of the API
+    client.BaseAddress = new Uri(apiBaseUrl);
 });
-
 
 var app = builder.Build();
 
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Swagger — always enabled
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-   // app.UseSwagger();
-    //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1")); // Add this line
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Marvel Rivals API v1");
+   // c.RoutePrefix = string.Empty; // Swagger UI is now at "/"
+});
 
+// Middlewares
 app.UseHttpsRedirection();
 app.UseRouting();
-app.MapGet("/", () => Results.Ok("Marvel Rivals API is running 🚀"));
 app.UseCors("AllowAngularApp");
 app.UseAuthorization();
 
+// Controllers
 app.MapControllers();
+
+// Quick healthcheck
+app.MapGet("/health", () => Results.Ok("✅ Marvel Rivals API is running"));
 
 app.Run();
