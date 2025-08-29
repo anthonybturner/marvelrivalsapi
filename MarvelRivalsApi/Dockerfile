@@ -1,20 +1,18 @@
-# Use official .NET 8 SDK image for build
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /app
+# Build Stage (needs SDK)
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
 
-EXPOSE 8080
-
-# Copy csproj and restore dependencies
+# Copy csproj(s) and restore dependencies
 COPY *.csproj ./
 RUN dotnet restore
 
-# Copy remaining files and build
+# Copy remaining files and publish
 COPY . ./
 RUN dotnet publish -c Release -o /app/publish
 
-# Use runtime image for smaller size
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+# Runtime Stage (smaller image)
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/publish .
-EXPOSE 10000
+EXPOSE 8080
 ENTRYPOINT ["dotnet", "MarvelRivalsApi.dll"]
