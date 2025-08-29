@@ -39,16 +39,22 @@ builder.Services.AddEndpointsApiExplorer();
 //    c.SwaggerDoc("v1", new() { Title = "My API", Version = "v1" });
 //});
 //var connectionString = "Host=postgres.railway.internal;Port=5432;Database=marvelrivalsdb;Username=postgres;Password=VKthNrcIaBaTbgJlGAcpMqJKhLsMXyDd";
+var rawConnString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+if (string.IsNullOrEmpty(rawConnString))
+{
+    Console.WriteLine("DefaultConnection not found in config, building manually from environment vars...");
+    rawConnString = "Host=<SERVER_HOST>;Port=<SERVER_PORT>;Database=<SERVER_DB>;Username=<SERVER_USER>;Password=<SERVER_PASSWORD>";
+}
 
-var baseConnectionString = Environment.GetEnvironmentVariable("DefaultConnection")
-                       ?? builder.Configuration.GetConnectionString("DefaultConnection")
-                        .Replace("<SERVER_HOST>", Environment.GetEnvironmentVariable("SERVER_HOST") ?? "<default-host>")
-                        .Replace("<SERVER_DB>", Environment.GetEnvironmentVariable("SERVER_DB") ?? "<default-db>")
-                        .Replace("<SERVER_USER>", Environment.GetEnvironmentVariable("SERVER_USER") ?? "<default-user>")
-                        .Replace("<SERVER_PASSWORD>", Environment.GetEnvironmentVariable("SERVER_PASSWORD") ?? "<default-password>")
-                        .Replace("<SERVER_PORT>", Environment.GetEnvironmentVariable("SERVER_PORT") ?? "<default-port>")
-                        ;
+var baseConnectionString = rawConnString
+    .Replace("<SERVER_HOST>", Environment.GetEnvironmentVariable("SERVER_HOST") ?? "localhost")
+    .Replace("<SERVER_DB>", Environment.GetEnvironmentVariable("SERVER_DB") ?? "postgres")
+    .Replace("<SERVER_USER>", Environment.GetEnvironmentVariable("SERVER_USER") ?? "user")
+    .Replace("<SERVER_PASSWORD>", Environment.GetEnvironmentVariable("SERVER_PASSWORD") ?? "password")
+    .Replace("<SERVER_PORT>", Environment.GetEnvironmentVariable("SERVER_PORT") ?? "5432");
+
+;
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(baseConnectionString));
