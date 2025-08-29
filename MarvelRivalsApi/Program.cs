@@ -1,4 +1,4 @@
-using MarvelRivals.Data;
+﻿using MarvelRivals.Data;
 using MarvelRivals.Data.Repositories.Heroes;
 using MarvelRivals.Data.Repositories.Maps;
 using MarvelRivals.Services.GameMaps;
@@ -49,8 +49,8 @@ if (string.IsNullOrEmpty(rawConnString))
 
 var baseConnectionString = rawConnString
     .Replace("<SERVER_HOST>", Environment.GetEnvironmentVariable("SERVER_HOST") ?? "localhost")
-    .Replace("<SERVER_DB>", Environment.GetEnvironmentVariable("SERVER_DB") ?? "postgres")
-    .Replace("<SERVER_USER>", Environment.GetEnvironmentVariable("SERVER_USER") ?? "user")
+    .Replace("<SERVER_DB>", Environment.GetEnvironmentVariable("SERVER_DB") ?? "marvelrivalsdb")
+    .Replace("<SERVER_USER>", Environment.GetEnvironmentVariable("SERVER_USER") ?? "postgres")
     .Replace("<SERVER_PASSWORD>", Environment.GetEnvironmentVariable("SERVER_PASSWORD") ?? "password")
     .Replace("<SERVER_PORT>", Environment.GetEnvironmentVariable("SERVER_PORT") ?? "5432");
 
@@ -99,6 +99,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.MapGet("/", () => Results.Ok("Marvel Rivals API is running 🚀"));
 app.UseCors("AllowAngularApp");
 app.UseAuthorization();
 
