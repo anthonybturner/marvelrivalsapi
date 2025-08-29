@@ -4,32 +4,35 @@ using MarvelRivals.Data.Repositories.Maps;
 using MarvelRivals.Services.GameMaps;
 using MarvelRivals.Services.Heroes;
 using MarvelRivals.Services.Managers;
-using MarvelRivalsApi.Data.Repositories.MatchHistory;
 using MarvelRivalsApi.Data.Repositories.Maps;
+using MarvelRivalsApi.Data.Repositories.Matchhistory;
+using MarvelRivalsApi.Data.Repositories.MatchHistory;
 using MarvelRivalsApi.Services.Managers;
 using MarvelRivalsApi.Services.MatchHistory;
 using MarvelRivalsApi.Services.MatchHistoryService;
 using Microsoft.EntityFrameworkCore;
-using MarvelRivalsApi.Data.Repositories.Matchhistory;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// --- Configure Port for Railway ---
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
-// Allow Angular app
+// --- Configure CORS ---
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
     {
-        policy.WithOrigins("http://localhost:4200", "https://mruiweb.onrender.com")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.WithOrigins(
+            "http://localhost:4200"    // Local dev
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod();
     });
 });
 
-// Add services
+// --- Add Controllers and Swagger ---
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -43,7 +46,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// Connection string
+// --- Configure Database ---
 var rawConnString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 if (string.IsNullOrEmpty(rawConnString))
@@ -62,7 +65,7 @@ var baseConnectionString = rawConnString
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(baseConnectionString));
 
-// Repositories & Services
+// --- Register Repositories & Services ---
 builder.Services.AddScoped<IHeroesService, HeroesService>();
 builder.Services.AddScoped<IGameMapsService, GameMapsService>();
 builder.Services.AddScoped<IMatchHistoryService, MatchHistoryService>();
@@ -75,7 +78,7 @@ builder.Services.AddScoped<GameMapsManager>();
 builder.Services.AddScoped<HeroesManager>();
 builder.Services.AddScoped<MatchHistoryManager>();
 
-// Http Clients
+// --- Configure HttpClients for Services ---
 string apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "";
 builder.Services.AddHttpClient<IHeroesService, HeroesService>(client =>
 {
@@ -92,24 +95,22 @@ builder.Services.AddHttpClient<IMatchHistoryService, MatchHistoryService>(client
 
 var app = builder.Build();
 
-// Swagger — always enabled
+// --- Swagger UI ---
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Marvel Rivals API v1");
-   // c.RoutePrefix = string.Empty; // Swagger UI is now at "/"
 });
 
-// Middlewares
+// --- Middlewares ---
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseCors("AllowAngularApp");
+app.UseCors("AllowAngularApp");  // <-- Must be BEFORE UseAuthorization
 app.UseAuthorization();
 
-// Controllers
+// --- Map Controllers & Healthcheck ---
 app.MapControllers();
-
-// Quick healthcheck
 app.MapGet("/health", () => Results.Ok("✅ Marvel Rivals API is running"));
 
+// --- Run App ---
 app.Run();
