@@ -39,7 +39,7 @@ builder.Services.AddEndpointsApiExplorer();
 //    c.SwaggerDoc("v1", new() { Title = "My API", Version = "v1" });
 //});
 
-var connectionString = "Host = centerbeam.proxy.rlwy.net; Database = marvelrivalsdb; Username = postgres; Password = VKthNrcIaBaTbgJlGAcpMqJKhLsMXyDd";
+var connectionString = "Host=postgres.railway.internal;Port=5432;Database=marvelrivalsdb;Username=postgres;Password=VKthNrcIaBaTbgJlGAcpMqJKhLsMXyDd";
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
