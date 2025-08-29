@@ -15,6 +15,13 @@ using MarvelRivalsApi.Data.Repositories.Matchhistory;
 var builder = WebApplication.CreateBuilder(args);
 string? apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "";
 
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(int.Parse(port));
+});
+
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp",
