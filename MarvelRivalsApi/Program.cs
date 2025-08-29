@@ -15,12 +15,8 @@ using MarvelRivalsApi.Data.Repositories.Matchhistory;
 var builder = WebApplication.CreateBuilder(args);
 string? apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "";
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(int.Parse(port));
-});
-
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 builder.Services.AddCors(options =>
 {
@@ -43,7 +39,13 @@ builder.Services.AddEndpointsApiExplorer();
 //    c.SwaggerDoc("v1", new() { Title = "My API", Version = "v1" });
 //});
 
-var baseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
+var connectionString = "Host = centerbeam.proxy.rlwy.net; Database = marvelrivalsdb; Username = postgres; Password = VKthNrcIaBaTbgJlGAcpMqJKhLsMXyDd";
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(connectionString));
+
+
+//var baseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
 //var connectionString = baseConnectionString
 //    .Replace("<SERVER_HOST>", Environment.GetEnvironmentVariable("SERVER_HOST") ?? "<default-host>")
 //    .Replace("<SERVER_DB>", Environment.GetEnvironmentVariable("SERVER_DB") ?? "<default-db>")
@@ -51,7 +53,7 @@ var baseConnectionString = builder.Configuration.GetConnectionString("DefaultCon
 //    .Replace("<SERVER_PASSWORD>", Environment.GetEnvironmentVariable("SERVER_PASSWORD") ?? "<default-password>");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(baseConnectionString));
+    options.UseNpgsql(connectionString));
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
