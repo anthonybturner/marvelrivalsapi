@@ -21,8 +21,9 @@ namespace MarvelRivalsApi.TEST.Data.Repositories.MatchHistory
             var matchHistory2 = CreateMockMatchHistory("2", "test map name 2", 456, playerName);
             var matchHistory3 = CreateMockMatchHistory("3", "test map name 3", 789, playerName);
 
-            return [matchHistory, matchHistory2, matchHistory3];
-
+            return new List<Models.Entities.MatchHistory>{
+                matchHistory, matchHistory2, matchHistory3 
+            };
         }
 
         private static Models.Entities.MatchHistory CreateMockMatchHistory(string matchUid, string matchMapName, long playerUid, string playerName)
