@@ -38,12 +38,11 @@ builder.Services.AddEndpointsApiExplorer();
 //    c.CustomSchemaIds(type => type.FullName);
 //    c.SwaggerDoc("v1", new() { Title = "My API", Version = "v1" });
 //});
+//var connectionString = "Host=postgres.railway.internal;Port=5432;Database=marvelrivalsdb;Username=postgres;Password=VKthNrcIaBaTbgJlGAcpMqJKhLsMXyDd";
 
-var connectionString = "Host=postgres.railway.internal;Port=5432;Database=marvelrivalsdb;Username=postgres;Password=VKthNrcIaBaTbgJlGAcpMqJKhLsMXyDd";
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
-
+var baseConnectionString = Environment.GetEnvironmentVariable("DefaultConnection")
+                       ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
 //var baseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
 //var connectionString = baseConnectionString
@@ -53,10 +52,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //    .Replace("<SERVER_PASSWORD>", Environment.GetEnvironmentVariable("SERVER_PASSWORD") ?? "<default-password>");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(baseConnectionString));
 
 builder.Services.AddScoped<IHeroesService, HeroesService>();
 builder.Services.AddScoped<IGameMapsService, GameMapsService>();

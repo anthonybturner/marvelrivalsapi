@@ -52,7 +52,7 @@ namespace MarvelRivals.Controllers
             return Ok(response);
         }
 
-        [HttpPost("sync-maps")]
+        [HttpPost("sync")]
         public async Task<IActionResult> SyncMaps()
         {
             await gameMapsManager.InitAsync();

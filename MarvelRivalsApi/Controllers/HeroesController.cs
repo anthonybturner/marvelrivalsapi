@@ -46,7 +46,7 @@ namespace MarvelRivals.Controllers
             return CreatedAtAction(nameof(GetHero), new { hero.Id }, hero);
         }
 
-        [HttpPost("sync-heroes")]
+        [HttpPost("sync")]
         public async Task<IActionResult> SyncHeroes()
         {
             await heroesManager.InitAsync();

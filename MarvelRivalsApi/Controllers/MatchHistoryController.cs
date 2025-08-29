@@ -39,7 +39,7 @@ namespace MarvelRivalsApi.Controllers
             return Ok(matchesDto);
         }
 
-        [HttpPost("sync-match-history")]
+        [HttpPost("sync")]
         public async Task<IActionResult> SyncMatches()
         {
             await matchHistoryManager.SyncMatchHistoryToDatabaseAsync();
