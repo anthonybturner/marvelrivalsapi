@@ -13,9 +13,9 @@ using Microsoft.EntityFrameworkCore;
 using MarvelRivalsApi.Data.Repositories.Matchhistory;
 
 var builder = WebApplication.CreateBuilder(args);
-string? apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "";
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 builder.Services.AddCors(options =>
@@ -42,14 +42,13 @@ builder.Services.AddEndpointsApiExplorer();
 
 
 var baseConnectionString = Environment.GetEnvironmentVariable("DefaultConnection")
-                       ?? builder.Configuration.GetConnectionString("DefaultConnection");
-
-//var baseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
-//var connectionString = baseConnectionString
-//    .Replace("<SERVER_HOST>", Environment.GetEnvironmentVariable("SERVER_HOST") ?? "<default-host>")
-//    .Replace("<SERVER_DB>", Environment.GetEnvironmentVariable("SERVER_DB") ?? "<default-db>")
-//    .Replace("<SERVER_USER>", Environment.GetEnvironmentVariable("SERVER_USER") ?? "<default-user>")
-//    .Replace("<SERVER_PASSWORD>", Environment.GetEnvironmentVariable("SERVER_PASSWORD") ?? "<default-password>");
+                       ?? builder.Configuration.GetConnectionString("DefaultConnection")
+                        .Replace("<SERVER_HOST>", Environment.GetEnvironmentVariable("SERVER_HOST") ?? "<default-host>")
+                        .Replace("<SERVER_DB>", Environment.GetEnvironmentVariable("SERVER_DB") ?? "<default-db>")
+                        .Replace("<SERVER_USER>", Environment.GetEnvironmentVariable("SERVER_USER") ?? "<default-user>")
+                        .Replace("<SERVER_PASSWORD>", Environment.GetEnvironmentVariable("SERVER_PASSWORD") ?? "<default-password>")
+                        .Replace("<SERVER_PORT>", Environment.GetEnvironmentVariable("SERVER_PORT") ?? "<default-port>")
+                        ;
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(baseConnectionString));
@@ -67,7 +66,7 @@ builder.Services.AddScoped<GameMapsManager>();
 builder.Services.AddScoped<HeroesManager>();
 builder.Services.AddScoped<MatchHistoryManager>();
 
-
+string apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "";
 builder.Services.AddHttpClient<IHeroesService, HeroesService>(client =>
 {
     client.BaseAddress = new Uri(apiBaseUrl); // Replace with the actual base URL of the API
