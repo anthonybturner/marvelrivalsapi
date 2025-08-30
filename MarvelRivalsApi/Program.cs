@@ -25,7 +25,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAngularApp", policy =>
     {
         policy.WithOrigins(
-            "http://localhost:4200", "https://marvelrivalsui.vercel.app/"    // Local dev
+            "http://localhost:4200", "https://marvelrivalsui.vercel.app"    // Local dev
         )
         .AllowAnyHeader()
         .AllowAnyMethod();
