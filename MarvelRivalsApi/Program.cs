@@ -103,7 +103,6 @@ app.UseSwaggerUI(c =>
 });
 
 // --- Middlewares ---
-app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors("AllowAngularApp");  // <-- Must be BEFORE UseAuthorization
 app.UseAuthorization();
