@@ -1,4 +1,4 @@
-﻿using MarvelRivals.Data;
+﻿using MarvelRivalsApi.Data;
 using MarvelRivalsApi.Data.Repositories.Matchhistory;
 using Microsoft.EntityFrameworkCore;
 
