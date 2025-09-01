@@ -15,7 +15,11 @@ namespace MarvelRivalsApi.Data.Repositories.PlayerStats
 
         public async Task<Models.Entities.PlayerStat?> GetByUIdAsync(long uid)
         {
-            return await dbContext.PlayerStats.FirstOrDefaultAsync(ps => ps.Uid == uid);
+            return await dbContext.PlayerStats
+                .Include(p => p.OverallStats)
+                .Include(p => p.Player)
+                .Include(p => p.Updates)
+                .FirstOrDefaultAsync(ps => ps.Uid == uid);
         }
 
      
