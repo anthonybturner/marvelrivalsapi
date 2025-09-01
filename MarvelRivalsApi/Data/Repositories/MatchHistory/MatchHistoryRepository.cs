@@ -97,7 +97,7 @@ namespace MarvelRivalsApi.Data.Repositories.Matchhistory
                 .Select(mh => new PlayerInfoDto
                 {
                     PlayerName = mh.MatchPlayer != null ? mh.MatchPlayer.PlayerName : string.Empty, // Ensure non-null value
-                    PlayerUid = mh.MatchPlayer != null ? mh.MatchPlayer.PlayerUid : null,   // Ensure non-null value
+                    PlayerUid = (long)(mh.MatchPlayer != null ? mh.MatchPlayer.PlayerUid : null),   // Ensure non-null value
                 })
                 .Distinct()
                 .ToListAsync();

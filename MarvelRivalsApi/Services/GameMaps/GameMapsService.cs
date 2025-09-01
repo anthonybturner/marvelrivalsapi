@@ -1,6 +1,5 @@
-﻿using MarvelRivals.Data;
+﻿using MarvelRivalsApi.Data;
 using MarvelRivals.Models.API;
-using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
 namespace MarvelRivals.Services.GameMaps

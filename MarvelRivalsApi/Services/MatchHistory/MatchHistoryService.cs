@@ -1,9 +1,6 @@
-﻿using MarvelRivals.Data;
-using MarvelRivals.Models.API;
+﻿using MarvelRivalsApi.Data;
 using MarvelRivalsApi.Models.API;
 using MarvelRivalsApi.Services.MatchHistoryService;
-using Microsoft.EntityFrameworkCore;
-using System.Net.Http;
 using System.Text.Json;
 
 namespace MarvelRivalsApi.Services.MatchHistory

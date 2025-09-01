@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
-namespace MarvelRivals.Data
+namespace MarvelRivalsApi.Data
 {
     public class ApplicationDbContext : DbContext
     {
@@ -25,7 +25,7 @@ namespace MarvelRivals.Data
             //   .HasOne(mh => mh.MatchPlayer)
             //    .WithMany(mp => mp.PlayerHero);
         }
-
+        public DbSet<PlayerStat> PlayerStats { get; set; }
         public DbSet<GameMap> GameMaps { get; set; }
         public DbSet<Hero> Heroes { get; set; }
         public DbSet<MatchHistory> MatchHistory { get; set; }

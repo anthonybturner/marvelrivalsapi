@@ -1,4 +1,4 @@
-﻿using MarvelRivals.Data;
+﻿using MarvelRivalsApi.Data;
 using MarvelRivals.Data.Repositories.Heroes;
 using MarvelRivals.Data.Repositories.Maps;
 using MarvelRivals.Services.GameMaps;
@@ -12,6 +12,8 @@ using MarvelRivalsApi.Services.MatchHistory;
 using MarvelRivalsApi.Services.MatchHistoryService;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using MarvelRivalsApi.Services.PlayerStats;
+using MarvelRivalsApi.Data.Repositories.PlayerStats;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,17 +68,23 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(baseConnectionString));
 
 // --- Register Repositories & Services ---
+//Services
 builder.Services.AddScoped<IHeroesService, HeroesService>();
 builder.Services.AddScoped<IGameMapsService, GameMapsService>();
 builder.Services.AddScoped<IMatchHistoryService, MatchHistoryService>();
+builder.Services.AddScoped<IPlayerStatsService, PlayerStatsService>();
 
+//Repositories
 builder.Services.AddScoped<IGameMapsRepository, GameMapsRepository>();
 builder.Services.AddScoped<IHeroesRepository, HeroesRepository>();
 builder.Services.AddScoped<IMatchHistoryRepository, MatchHistoryRepository>();
+builder.Services.AddScoped<IPlayerStatsRepository, PlayerStatsRepository>();
 
+//Managers
 builder.Services.AddScoped<GameMapsManager>();
 builder.Services.AddScoped<HeroesManager>();
 builder.Services.AddScoped<MatchHistoryManager>();
+builder.Services.AddScoped<PlayerStatsManager>();
 
 // --- Configure HttpClients for Services ---
 string apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "";
@@ -89,6 +97,10 @@ builder.Services.AddHttpClient<IGameMapsService, GameMapsService>(client =>
     client.BaseAddress = new Uri(apiBaseUrl);
 });
 builder.Services.AddHttpClient<IMatchHistoryService, MatchHistoryService>(client =>
+{
+    client.BaseAddress = new Uri(apiBaseUrl);
+});
+builder.Services.AddHttpClient<IPlayerStatsService, PlayerStatsService>(client =>
 {
     client.BaseAddress = new Uri(apiBaseUrl);
 });
