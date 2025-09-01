@@ -29,9 +29,7 @@ namespace MarvelRivalsApi.Controllers
                 await pStatsManager.FetchPlayerStatsAndSaveToDatabaseAsync(uid);
                 response = await pStatsRepository.GetByUIdAsync(uid);
            }
-            return Ok("");
+            return Ok(response);
         }
     }
-
- 
 }

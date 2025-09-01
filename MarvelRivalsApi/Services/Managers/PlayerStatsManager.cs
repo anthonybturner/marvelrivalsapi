@@ -27,6 +27,7 @@ namespace MarvelRivalsApi.Services.Managers
                 var entity = PlayerStatsMapper.DtoToEntity(response);
                 
                 await pstatsRepository.AddAsync(entity);
+                await pstatsRepository.SaveChangesAsync();
             }
             catch (Exception ex)    
             {

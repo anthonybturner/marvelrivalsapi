@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MarvelRivalsApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250901120554_PlayerStatsEntity")]
-    partial class PlayerStatsEntity
+    [Migration("20250901152934_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
