@@ -22,7 +22,7 @@ namespace MarvelRivals.Mappings
                 Team = hero.Team,
                 Abilities = hero.Abilities?.Select(MapAbilityToDto).ToList(),
                 Costumes = hero.Costumes?.Select(MapCostumeToDto).ToList(),
-                Transformations = hero.Transformations?.Select(MapTransformationToDto).ToList(),
+               // Transformations = hero.Transformations?.Select(MapTransformationToDto).ToList(),
             };
             return heroDto;
         }
@@ -86,6 +86,7 @@ namespace MarvelRivals.Mappings
             Hero hero = new()
             {
                 HeroId = Dto.HeroId,
+                Name = Dto.Name,
                 RealName = Dto.RealName,
                 ImageUrl = Dto.ImageUrl,
                 Role = Dto.Role,

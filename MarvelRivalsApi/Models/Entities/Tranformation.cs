@@ -18,8 +18,5 @@ namespace MarvelRivalsApi.Models.Entities
 
         // Foreign key to Hero
         public int? HeroId { get; set; }
-
-        [ForeignKey("HeroId")]
-        public Hero? Hero { get; set; }
     }
 }

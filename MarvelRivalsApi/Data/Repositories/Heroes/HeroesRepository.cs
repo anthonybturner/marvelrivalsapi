@@ -17,9 +17,18 @@ namespace MarvelRivals.Data.Repositories.Heroes
         {
             return await context.Heroes
                 .Include(h => h.Abilities)
-                .Include(h => h.Transformations)
+               // .Include(h => h.Transformations)
                 .Include(h => h.Costumes)
                 .ToListAsync();
+        }
+
+        public async Task<Hero> GetByNameAsync(string name)
+        {
+            return await context.Heroes
+             .Include(h => h.Abilities)
+             .Include(h => h.Transformations)
+             .Include(h => h.Costumes)
+             .FirstOrDefaultAsync(h => h.Name == name);
         }
 
         public async Task<Hero?> GetByIdAsync(int HeroId)
@@ -37,7 +46,7 @@ namespace MarvelRivals.Data.Repositories.Heroes
                 .Include(h => h.Abilities)
                 .Include(h => h.Transformations)
                 .Include(h => h.Costumes)
-                .Where(h => ids.Contains(h.Id ?? 0)) // Ensure null-coalescing operator to handle nullable Id
+                .Where(h => ids.Contains(h.HeroId)) // Ensure null-coalescing operator to handle nullable Id
                 .ToListAsync();
         }
 

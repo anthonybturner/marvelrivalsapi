@@ -28,11 +28,20 @@ namespace MarvelRivals.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<Hero>> GetHero(int id)
         {
                     
             var response = await heroesRepository.GetByIdAsync(id);
+            if (response == null) { return NotFound(); }
+            return Ok(response);
+        }
+
+        [HttpGet("{name}")]
+        public async Task<ActionResult<Hero>> GetHeroByName(string name)
+        {
+
+            var response = await heroesRepository.GetByNameAsync(name);
             if (response == null) { return NotFound(); }
             return Ok(response);
         }

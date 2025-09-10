@@ -9,6 +9,8 @@ namespace MarvelRivals.Data.Repositories.Heroes
         Task<Hero?> GetByIdAsync(int id);
         Task<List<Hero>> GetByIdsAsync(IEnumerable<int> ids);
 
+        Task<Hero> GetByNameAsync(string name);
+
         Task AddAsync(Hero hero);
 
         void Update(Hero hero);
